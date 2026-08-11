@@ -17,24 +17,70 @@ function Line({ children, i, className }) {
   );
 }
 
-// 4 Fixed Landing Pads Coordinates
+// 4 Responsive Landing Pads Coordinates (Works on Mobile & Desktop)
 const padCoordinates = [
-  { id: 0, x: "4vw", y: "12vh", rot: -12, name: "Top-Left", glow: "#ff2e83" },
-  { id: 1, x: "72vw", y: "14vh", rot: 10, name: "Top-Right", glow: "#2ee6d6" },
-  { id: 2, x: "70vw", y: "62vh", rot: -8, name: "Bottom-Right", glow: "#ffcf5c" },
-  { id: 3, x: "4vw", y: "60vh", rot: 9, name: "Bottom-Left", glow: "#8b5cff" },
+  { id: 0, x: "2vw", y: "8vh", rot: -12, glow: "#ff2e83" },   // Top-Left
+  { id: 1, x: "58vw", y: "9vh", rot: 10, glow: "#2ee6d6" },   // Top-Right
+  { id: 2, x: "56vw", y: "62vh", rot: -8, glow: "#ffcf5c" },  // Bottom-Right
+  { id: 3, x: "2vw", y: "60vh", rot: 9, glow: "#8b5cff" },   // Bottom-Left
+];
+
+// 4 Dynamic Jump Styles with distinct animations & badges
+const jumpStyles = [
+  {
+    name: "Paper Airplane Flight ✈️",
+    badge: "✈️",
+    anim: (padRot) => ({
+      scale: [1, 0.2, 1.35, 1],
+      rotateZ: [0, 540, 720, padRot],
+      y: [0, -140, -90, 0],
+      borderRadius: ["16px", "999px", "16px", "16px"],
+    }),
+  },
+  {
+    name: "3D Corkscrew Spin 🌀",
+    badge: "🌀",
+    anim: (padRot) => ({
+      scale: [1, 1.4, 0.8, 1],
+      rotateZ: [0, -360, 360, padRot],
+      rotateY: [0, 360, 720, 0],
+      y: [0, -160, -80, 0],
+      borderRadius: ["16px", "24px", "16px", "16px"],
+    }),
+  },
+  {
+    name: "Frog Super Leap 🐸",
+    badge: "🐸",
+    anim: (padRot) => ({
+      scale: [1, 1.5, 1.2, 1],
+      rotateZ: [0, 25, -25, padRot],
+      y: [0, -190, -100, 0],
+      borderRadius: ["16px", "16px", "16px", "16px"],
+    }),
+  },
+  {
+    name: "Rocket Speed Zoom 🚀",
+    badge: "🚀",
+    anim: (padRot) => ({
+      scale: [1, 0.3, 1.45, 1],
+      rotateZ: [0, 45, 90, padRot],
+      y: [0, -210, -110, 0],
+      borderRadius: ["16px", "999px", "16px", "16px"],
+    }),
+  },
 ];
 
 export default function Hero({ music, cardAudio, onOpenModal }) {
   const [activePad, setActivePad] = useState(0); // 0, 1, 2, 3
   const [photoOffset, setPhotoOffset] = useState(0);
+  const [jumpStyleIdx, setJumpStyleIdx] = useState(0);
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const sx = useSpring(mx, { stiffness: 70, damping: 20 });
   const sy = useSpring(my, { stiffness: 70, damping: 20 });
-  const rotX = useTransform(sy, [-0.5, 0.5], [12, -12]);
-  const rotY = useTransform(sx, [-0.5, 0.5], [-14, 14]);
+  const rotX = useTransform(sy, [-0.5, 0.5], [10, -10]);
+  const rotY = useTransform(sx, [-0.5, 0.5], [-12, 12]);
 
   const onMove = (e) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -42,7 +88,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
     my.set((e.clientY - r.top) / r.height - 0.5);
   };
 
-  // Paper Crumple & Airplane Flight Cycle every 3.6 seconds!
+  // Dynamic Jump Timer: Rotates pads & switches jump styles every 3.5 seconds!
   useEffect(() => {
     const timer = setInterval(() => {
       setActivePad((prev) => {
@@ -52,12 +98,14 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         }
         return nextPad;
       });
-    }, 3600);
+      setJumpStyleIdx((prev) => (prev + 1) % jumpStyles.length);
+    }, 3500);
     return () => clearInterval(timer);
   }, []);
 
   const currentPad = padCoordinates[activePad];
   const activeMemory = memories[(photoOffset + activePad) % memories.length];
+  const currentJumpStyle = jumpStyles[jumpStyleIdx];
 
   const scrollToCarousel = () => {
     const carouselEl = document.querySelector('[data-testid="memory-carousel"]');
@@ -80,9 +128,9 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         <div className="absolute right-1/5 top-1/4 h-[45vh] w-[45vh] rounded-full bg-[#8b5cff]/25 blur-[130px]" />
       </div>
 
-      {/* 4 Interactive Dynamic 3D Corner Cards */}
+      {/* 4 Responsive Dynamic 3D Corner Cards (Visible on Mobile & Desktop) */}
       <motion.div
-        className="absolute inset-0 z-10 hidden md:block"
+        className="absolute inset-0 z-10 block"
         style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}
       >
         {padCoordinates.map((pad, idx) => {
@@ -98,23 +146,18 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
               whileHover={{ scale: 1.12, zIndex: 40 }}
             >
               <div
-                className={`relative w-32 sm:w-40 md:w-44 rounded-2xl bg-white p-2 shadow-[0_25px_60px_rgba(0,0,0,0.7)] transition-all duration-300 group-hover:shadow-[0_30px_70px_rgba(255,46,131,0.4)] border border-white/50`}
+                className={`relative w-20 sm:w-36 md:w-44 rounded-2xl bg-white p-1.5 sm:p-2 shadow-[0_20px_50px_rgba(0,0,0,0.6)] transition-all duration-300 ${
+                  isCurrentActive ? "ring-2 sm:ring-4 ring-[#ff2e83] shadow-[0_0_30px_rgba(255,46,131,0.5)]" : "border border-white/50"
+                }`}
                 style={{ transform: `rotate(${pad.rot}deg)` }}
               >
                 {/* Washi tape clip */}
                 <div className="washi-tape" />
 
-                {/* Spinning Vinyl record peek behind card */}
-                <div className="absolute -right-3 top-6 z-0 h-20 w-20 rounded-full bg-black p-1 shadow-lg border border-white/10 opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-3 spin-vinyl">
-                  <div className="flex h-full w-full items-center justify-center rounded-full bg-[#ff2e83]/30">
-                    <div className="h-5 w-5 rounded-full bg-zinc-900" />
-                  </div>
-                </div>
-
-                <div className="relative h-44 sm:h-52 w-full overflow-hidden rounded-xl bg-black">
+                <div className="relative h-28 sm:h-44 md:h-52 w-full overflow-hidden rounded-xl bg-black">
                   <img src={padMemory.src} alt="" className="h-full w-full object-cover group-hover:scale-108 transition-transform duration-500" />
-                  <div className="absolute bottom-1.5 left-1.5 right-1.5 rounded-lg bg-black/75 px-2 py-1 text-[10px] font-bold text-white backdrop-blur-md truncate text-left border border-white/10">
-                    <span className="text-[#2ee6d6] mr-1">#{String(padMemory.id).padStart(2, "0")}</span>
+                  <div className="absolute bottom-1 left-1 right-1 sm:bottom-1.5 sm:left-1.5 sm:right-1.5 rounded-lg bg-black/75 px-1.5 py-0.5 sm:px-2 sm:py-1 text-[8px] sm:text-[10px] font-bold text-white backdrop-blur-md truncate text-left border border-white/10">
+                    <span className="text-[#2ee6d6] mr-0.5 sm:mr-1">#{String(padMemory.id).padStart(2, "0")}</span>
                     {padMemory.caption}
                   </div>
                 </div>
@@ -124,42 +167,38 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         })}
       </motion.div>
 
-      {/* Dynamic 3D Flying Card (Paper Plane Flight Arc) */}
+      {/* Dynamic 3D Jumping Card with Multi-Style Flight Animations (Visible on Mobile & Desktop) */}
       <motion.div
-        className="absolute z-30 hidden md:block pointer-events-auto cursor-pointer"
+        className="absolute z-30 block pointer-events-auto cursor-pointer"
         animate={{
           left: currentPad.x,
           top: currentPad.y,
         }}
         transition={{
-          duration: 1.4,
+          duration: 1.3,
           ease: [0.25, 1, 0.5, 1],
         }}
         onClick={() => onOpenModal && onOpenModal(activeMemory)}
       >
         <motion.div
-          animate={{
-            scale: [1, 0.2, 1.35, 1],
-            rotateZ: [0, 540, 720, currentPad.rot],
-            y: [0, -140, -100, 0],
-            borderRadius: ["16px", "999px", "16px", "16px"],
-          }}
+          key={`${photoOffset}-${activePad}-${jumpStyleIdx}`}
+          animate={currentJumpStyle.anim(currentPad.rot)}
           transition={{
-            duration: 1.4,
+            duration: 1.3,
             ease: "easeInOut",
-            times: [0, 0.25, 0.75, 1],
+            times: [0, 0.3, 0.7, 1],
           }}
-          className="relative w-36 sm:w-44 md:w-48 rounded-2xl bg-white p-2.5 shadow-[0_30px_90px_rgba(255,46,131,0.8)] border-2 border-[#ff2e83] overflow-hidden"
+          className="relative w-[88px] sm:w-40 md:w-48 rounded-2xl bg-white p-1.5 sm:p-2.5 shadow-[0_30px_90px_rgba(255,46,131,0.8)] border-2 border-[#ff2e83] overflow-hidden"
         >
-          {/* Flying Jet Badge */}
-          <div className="absolute -top-3 -right-3 z-40 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-r from-[#ff2e83] to-[#2ee6d6] text-white text-base font-bold shadow-xl animate-pulse">
-            ✈️
+          {/* Dynamic Flight Style Badge */}
+          <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 z-40 flex h-6 w-6 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-gradient-to-r from-[#ff2e83] to-[#2ee6d6] text-white text-xs sm:text-base font-bold shadow-xl animate-pulse">
+            {currentJumpStyle.badge}
           </div>
 
           {/* Washi tape clip */}
           <div className="washi-tape" />
 
-          <div className="relative h-48 sm:h-56 md:h-60 w-full overflow-hidden rounded-xl bg-black">
+          <div className="relative h-32 sm:h-52 md:h-60 w-full overflow-hidden rounded-xl bg-black">
             <AnimatePresence mode="wait">
               <motion.img
                 key={activeMemory.id}
@@ -168,12 +207,12 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
                 initial={{ opacity: 0, scale: 1.3 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.3 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.4 }}
                 className="h-full w-full object-cover"
               />
             </AnimatePresence>
 
-            <div className="absolute bottom-2 left-2 right-2 rounded-lg bg-black/85 px-2.5 py-1 text-xs font-extrabold text-white backdrop-blur-md truncate text-left border border-white/20">
+            <div className="absolute bottom-1 left-1 right-1 sm:bottom-2 sm:left-2 sm:right-2 rounded-lg bg-black/85 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-xs font-extrabold text-white backdrop-blur-md truncate text-left border border-white/20">
               <span className="text-[#2ee6d6] mr-1">#{String(activeMemory.id).padStart(2, "0")}</span>
               {activeMemory.caption}
             </div>
@@ -252,7 +291,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.1, duration: 0.8 }}
-          className="mt-6 sm:mt-8 max-w-sm sm:max-w-md text-xs sm:text-base text-white/80 leading-relaxed"
+          className="mt-6 sm:mt-8 max-w-xs sm:max-w-md text-xs sm:text-base text-white/80 leading-relaxed"
         >
           Mere pehle dost ke liye ek chhoti si duniya — banayi gayi yaadon, hansi aur dosti se. 💖
         </motion.p>
