@@ -32,6 +32,7 @@ export default function PhotoModal({ item, onClose, isPlaying, onToggleAudio }) 
   const handleZoomIn = () => setZoom((prev) => Math.min(prev + 0.5, 3));
   const handleZoomOut = () => setZoom((prev) => Math.max(prev - 0.5, 1));
   const handleResetZoom = () => setZoom(1);
+  const handleTogglePhotoZoom = () => setZoom((prev) => (prev > 1 ? 1 : 2));
 
   return (
     <AnimatePresence>
@@ -107,25 +108,28 @@ export default function PhotoModal({ item, onClose, isPlaying, onToggleAudio }) 
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-12 items-center">
-            {/* 100% Rock-Solid Static Image Area */}
-            <div className="md:col-span-7 relative h-52 sm:h-80 md:h-[440px] w-full overflow-hidden rounded-xl sm:rounded-2xl bg-black flex items-center justify-center border border-white/10 p-1">
+            {/* Interactive Zoomable Image Area — Direct Click to Zoom In / Out! */}
+            <div
+              className="md:col-span-7 relative h-52 sm:h-80 md:h-[440px] w-full overflow-hidden rounded-xl sm:rounded-2xl bg-black flex items-center justify-center border border-white/10 p-1 cursor-pointer group"
+              onClick={handleTogglePhotoZoom}
+              title="Click to Zoom In / Out"
+            >
               <img
                 key={item.id}
                 src={item.src}
                 alt={item.caption}
                 style={{
                   transform: `scale(${zoom})`,
-                  transition: "transform 0.25s ease-out",
+                  transition: "transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
                 }}
                 className="max-h-full max-w-full object-contain rounded-lg select-none pointer-events-none"
               />
 
-              {/* Zoom instruction overlay */}
-              {zoom === 1 && (
-                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 pointer-events-none rounded-full bg-black/75 px-2.5 py-0.5 text-[10px] sm:text-xs text-white/80 backdrop-blur-md border border-white/15 whitespace-nowrap">
-                  🔍 Click + / − to Zoom photo
-                </div>
-              )}
+              {/* Interactive Zoom instruction badge */}
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 pointer-events-none rounded-full bg-black/80 px-3 py-1 text-[10px] sm:text-xs text-white backdrop-blur-md border border-white/20 shadow-lg flex items-center gap-1.5">
+                <span>{zoom > 1 ? "🔍 Click photo to Zoom Out" : "🔍 Click photo or + / − to Zoom In"}</span>
+                <span className="rounded bg-[#ff2e83] px-1.5 py-0.5 text-[9px] font-bold text-white">{Math.round(zoom * 100)}%</span>
+              </div>
             </div>
 
             {/* Content & Music Controls */}
