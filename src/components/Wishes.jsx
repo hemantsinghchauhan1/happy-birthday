@@ -34,18 +34,18 @@ export default function Wishes() {
           </div>
 
           <h3 className="font-serif-i text-3xl sm:text-5xl italic text-[#f4efe6] leading-tight mb-6">
-            "Mithlesh, meri yaadon ki kitaab mein ek kona tera bhi hai..."
+            "Mithlesh, meri yaadon ki kitaab mein ek kona teri dosti ka bhi hai..."
           </h3>
 
           <div className="space-y-4 text-base sm:text-lg text-white/85 leading-relaxed font-sans">
             <p>
-              Waqt kitna bhi aage nikal jaye, kuch lamhe aur kuch insaan kabhi purane nahi hote. Sir Ross Masood Hall ke gate par tera intezaar karna aur us anjaan sheher mein mera pehla dost banna — wo ek aisa pal tha jisne meri zindagi badal di.
+              Sach boloon toh jab bhi kabhi peeche mudkar sochta hoon, lagta hai abhi toh aaya hoon AMU... jaise kal hi ki baat ho. Sir Ross Masood Hall ke gate par jab tu mera intezaar kar raha tha, us anjaan sheher mein pehla haath tune hi milaaya tha.
             </p>
             <p>
-              Kitaab-e-zindagi ke hazaaron panno mein se, sabse khaas aur sunehra panna tera hai. Saal beet gaye, waqt badal gaya... par tu aaj bhi wahi sachha insaan hai jis par main aankhein band karke bharosa kar sakta hoon.
+              Kitne hi saal beet gaye, par teri dosti aur tera apnapan aaj bhi wahi hai. Zindagi ki is kitaab mein hazaron safhe hain, par sabse khoobsurat aur khaas panna sirf teri dosti ka hai.
             </p>
             <p className="font-bold text-[#2ee6d6]">
-              Bas shukriya kehna tha ki tu meri zindagi ka itna khoobsurat hissa hai. Teri har khwahish poori ho, aur hum hamesha aise hi saath aage badhte rahein.
+              Bas shukriya kehna tha ki tu meri zindagi ka itna khoobsurat hissa hai. Happy Birthday Mere Bhai!
             </p>
           </div>
 

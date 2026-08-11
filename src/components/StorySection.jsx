@@ -13,15 +13,15 @@ const chapters = [
     n: "02",
     hi: "Sir Ross Masood Hall Ka Gate",
     sub: "The Unforgettable Meeting",
-    body: "Gate par tera mera intezaar karna — wahi se ek aisi dosti shuru hui jo waqt ke saath aur gehri hoti gayi.",
+    body: "Kabhi kabhi sochta hoon toh lagta hai abhi toh aaya hoon AMU... jaise kal hi ki baat ho. Ross Masood Hall ke gate par jab tu mera intezaar kar raha tha, wahi se humari dosti shuru hui thi.",
     accent: "#2ee6d6",
     icon: "🏛️",
   },
   {
     n: "03",
-    hi: "Yaadon Ki Kitaab Ka Ek Khaas Kona",
+    hi: "Yaadon Ki Kitaab Ka Khaas Kona",
     sub: "Treasured Moments",
-    body: "Zindagi ki is kitaab mein hazaron safhe hain, par sabse khoobsurat aur khaas panna sirf tere naam ka hai.",
+    body: "Zindagi ki is kitaab mein hazaron safhe hain, par sabse khoobsurat aur khaas panna sirf teri dosti ka hai.",
     accent: "#ffcf5c",
     icon: "📖",
   },
@@ -67,7 +67,7 @@ export default function StorySection() {
           Yaadon Ka <span className="font-serif-i italic normal-case text-[#ff2e83]">Khaas Kona</span>
         </h2>
         <p className="mt-3 max-w-xl text-sm sm:text-base text-white/75 leading-relaxed">
-          Zindagi ke hazaron panno mein se sabse sunehra panna — teri dosti.
+          Zindagi ke hazaron panno mein se sabse sunehra panna — teri dosti ka hai.
         </p>
       </motion.div>
 
