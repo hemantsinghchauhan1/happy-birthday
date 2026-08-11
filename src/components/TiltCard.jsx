@@ -4,6 +4,90 @@ import { fireConfetti } from "./Confetti";
 
 const glow = { magenta: "#ff2e83", cyan: "#2ee6d6", gold: "#ffcf5c", violet: "#8b5cff" };
 
+// 10 Unique Surprise Box Visual Themes & 3D Unwrap Animations
+const surpriseBoxThemes = {
+  1: {
+    icon: "✉️",
+    badge: "Origami Envelope Flip ✉️",
+    bg: "from-[#1a0c2e] via-[#091a28] to-[#040814]",
+    accent: "#2ee6d6",
+    buttonBg: "bg-[#2ee6d6] text-black shadow-[#2ee6d6]/40",
+    anim: { rotateY: [0, 90, 0], scale: [1, 0.85, 1] }
+  },
+  2: {
+    icon: "🎁",
+    badge: "Gold Shimmer Unwrap 🎁",
+    bg: "from-[#2e1d09] via-[#1a0f02] to-[#0a0601]",
+    accent: "#ffcf5c",
+    buttonBg: "bg-[#ffcf5c] text-black shadow-[#ffcf5c]/40",
+    anim: { rotateZ: [0, -14, 14, 0], scale: [1, 1.12, 1] }
+  },
+  3: {
+    icon: "🎆",
+    badge: "Confetti Explosion Burst 🎆",
+    bg: "from-[#2b081a] via-[#17040e] to-[#080206]",
+    accent: "#ff2e83",
+    buttonBg: "bg-[#ff2e83] text-white shadow-[#ff2e83]/40",
+    anim: { scale: [1, 1.25, 1], rotateZ: [0, 360] }
+  },
+  4: {
+    icon: "📸",
+    badge: "Camera Shutter Flash 📸",
+    bg: "from-[#081e2b] via-[#030e14] to-[#010609]",
+    accent: "#2ee6d6",
+    buttonBg: "bg-[#2ee6d6] text-black shadow-[#2ee6d6]/40",
+    anim: { opacity: [1, 0.2, 1], scale: [1, 1.1, 1] }
+  },
+  5: {
+    icon: "🔮",
+    badge: "Hologram Portal Open 🔮",
+    bg: "from-[#1e082b] via-[#0e0317] to-[#05010a]",
+    accent: "#8b5cff",
+    buttonBg: "bg-[#8b5cff] text-white shadow-[#8b5cff]/40",
+    anim: { rotateX: [0, 360], scale: [1, 0.9, 1] }
+  },
+  6: {
+    icon: "🌀",
+    badge: "Cosmic Vortex Twist 🌀",
+    bg: "from-[#2b0825] via-[#140311] to-[#070106]",
+    accent: "#ff2e83",
+    buttonBg: "bg-[#ff2e83] text-white shadow-[#ff2e83]/40",
+    anim: { rotateZ: [0, 720], scale: [1, 0.6, 1] }
+  },
+  7: {
+    icon: "👑",
+    badge: "Royal Treasure Chest 👑",
+    bg: "from-[#2b2408] via-[#141103] to-[#080701]",
+    accent: "#ffcf5c",
+    buttonBg: "bg-[#ffcf5c] text-black shadow-[#ffcf5c]/40",
+    anim: { y: [0, -35, 0], scale: [1, 1.1, 1] }
+  },
+  8: {
+    icon: "💖",
+    badge: "Heart Locket Pulse 💖",
+    bg: "from-[#2b0812] via-[#140308] to-[#080103]",
+    accent: "#ff2e83",
+    buttonBg: "bg-[#ff2e83] text-white shadow-[#ff2e83]/40",
+    anim: { scale: [1, 1.2, 0.88, 1] }
+  },
+  9: {
+    icon: "💿",
+    badge: "Retro Vinyl Unseal 💿",
+    bg: "from-[#08232b] via-[#031014] to-[#010608]",
+    accent: "#2ee6d6",
+    buttonBg: "bg-[#2ee6d6] text-black shadow-[#2ee6d6]/40",
+    anim: { rotateZ: [0, 540], scale: [1, 0.8, 1] }
+  },
+  10: {
+    icon: "✨",
+    badge: "Magic Starburst Pop ✨",
+    bg: "from-[#1c082b] via-[#0c0314] to-[#040108]",
+    accent: "#8b5cff",
+    buttonBg: "bg-[#8b5cff] text-white shadow-[#8b5cff]/40",
+    anim: { scale: [1, 1.3, 1], rotateY: [0, 180, 0] }
+  }
+};
+
 export default function TiltCard({ item, index, isPlaying, onToggleAudio, onOpenModal }) {
   const [isRevealed, setIsRevealed] = useState(false);
   const mx = useMotionValue(0);
@@ -14,9 +98,11 @@ export default function TiltCard({ item, index, isPlaying, onToggleAudio, onOpen
   const rotY = useTransform(sx, [-0.5, 0.5], [-12, 12]);
   const c = glow[item.accent] || glow.magenta;
 
+  const cardTheme = surpriseBoxThemes[item.id] || surpriseBoxThemes[1];
+
   const onMove = (e) => {
     // Disable 3D tilt on touch screens / mobile viewports to prevent cards from dancing on scroll!
-    if (e.pointerType === "touch" || typeof window !== "undefined" && window.innerWidth < 640) return;
+    if (e.pointerType === "touch" || (typeof window !== "undefined" && window.innerWidth < 640)) return;
     const r = e.currentTarget.getBoundingClientRect();
     mx.set((e.clientX - r.left) / r.width - 0.5);
     my.set((e.clientY - r.top) / r.height - 0.5);
@@ -83,39 +169,47 @@ export default function TiltCard({ item, index, isPlaying, onToggleAudio, onOpen
         {/* Border glow highlight */}
         <div
           className="absolute inset-0 z-20 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100 pointer-events-none"
-          style={{ boxShadow: `inset 0 0 0 2px ${c}, 0 30px 80px ${c}44` }}
+          style={{ boxShadow: `inset 0 0 0 2px ${cardTheme.accent}, 0 30px 80px ${cardTheme.accent}44` }}
         />
 
         {/* Card Frame Content */}
         {!isRevealed ? (
-          /* Locked / Surprise Wrapped Gift Box Envelope */
+          /* Locked / Surprise Wrapped Gift Box Envelope — Unique Design & 3D Unwrap Animation! */
           <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-gray-950">
             <motion.div
               initial={{ scale: 1 }}
-              whileHover={{ scale: 1.03 }}
-              className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-gradient-to-br from-[#12121e] via-[#1a0928] to-[#06060c] p-5 text-center text-white border border-white/10"
+              whileHover={{ scale: 1.04 }}
+              animate={isRevealed ? cardTheme.anim : { scale: 1 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+              className={`absolute inset-0 z-30 flex flex-col items-center justify-center bg-gradient-to-br ${cardTheme.bg} p-5 text-center text-white border border-white/10`}
             >
               {/* Glowing ribbon / wax seal */}
-              <div className="relative mb-3 flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-gradient-to-tr from-[#ff2e83] to-[#ffcf5c] p-1 shadow-[0_0_30px_rgba(255,46,131,0.5)]">
+              <div
+                className="relative mb-3 flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full p-1 shadow-lg"
+                style={{
+                  background: `linear-gradient(135deg, ${cardTheme.accent}, #ffffff)`,
+                  boxShadow: `0 0 30px ${cardTheme.accent}66`,
+                }}
+              >
                 <div className="flex h-full w-full items-center justify-center rounded-full bg-black/80 text-2xl sm:text-3xl">
-                  🎁
+                  {cardTheme.icon}
                 </div>
               </div>
 
-              <span className="font-hand text-xl sm:text-2xl text-[#2ee6d6] neon-cyan">
+              <span className="font-hand text-xl sm:text-2xl" style={{ color: cardTheme.accent }}>
                 Memory #{String(item.id).padStart(2, "0")}
               </span>
 
               <h4 className="mt-1 text-sm sm:text-base font-extrabold text-white">
-                Secret Surprise Box
+                {cardTheme.badge}
               </h4>
 
               <p className="mt-1.5 text-[11px] sm:text-xs text-white/60">
                 Tap to unwrap photo & play song! ✨
               </p>
 
-              <div className="mt-4 rounded-full bg-[#ff2e83] px-4 py-1.5 text-xs font-bold text-white shadow-lg shadow-[#ff2e83]/40 transition group-hover:scale-105">
-                🎉 Open Surprise & Play Song
+              <div className={`mt-4 rounded-full px-4 py-1.5 text-xs font-extrabold transition group-hover:scale-105 ${cardTheme.buttonBg}`}>
+                🎉 Open Surprise
               </div>
             </motion.div>
           </div>
