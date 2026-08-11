@@ -17,15 +17,15 @@ function Line({ children, i, className }) {
   );
 }
 
-// 4 Corner Pad Positions pushed to the extreme screen corners (0 overlap with title)
+// 4 Corner Pad Positions using consistent left/top percentages so Framer Motion can interpolate flight arcs
 const padCoordinates = [
-  { id: 0, style: { left: "3%", top: "12%" }, rot: -12, glow: "#ff2e83" },   // Far Top-Left
-  { id: 1, style: { right: "3%", top: "12%" }, rot: 10, glow: "#2ee6d6" },   // Far Top-Right
-  { id: 2, style: { right: "4%", bottom: "10%" }, rot: -8, glow: "#ffcf5c" }, // Far Bottom-Right
-  { id: 3, style: { left: "4%", bottom: "10%" }, rot: 9, glow: "#8b5cff" },   // Far Bottom-Left
+  { id: 0, pos: { left: "3%", top: "12%" }, rot: -12, glow: "#ff2e83" },   // Far Top-Left
+  { id: 1, pos: { left: "76%", top: "12%" }, rot: 10, glow: "#2ee6d6" },   // Far Top-Right (76% left clears title!)
+  { id: 2, pos: { left: "76%", top: "68%" }, rot: -8, glow: "#ffcf5c" },  // Far Bottom-Right (clears CTAs!)
+  { id: 3, pos: { left: "3%", top: "66%" }, rot: 9, glow: "#8b5cff" },    // Far Bottom-Left
 ];
 
-// 4 Dynamic Jump Styles
+// 4 Dynamic Jump Flight Styles
 const jumpStyles = [
   {
     name: "Paper Airplane Flight ✈️",
@@ -128,7 +128,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         <div className="absolute right-1/5 top-1/4 h-[45vh] w-[45vh] rounded-full bg-[#8b5cff]/25 blur-[130px]" />
       </div>
 
-      {/* 4 Corner Landing Pads (Pushed to far edges) */}
+      {/* 4 Corner Landing Pads */}
       <motion.div
         className="absolute inset-0 z-10 block"
         style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}
@@ -141,7 +141,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
             <motion.div
               key={pad.id}
               className="absolute cursor-pointer group"
-              style={{ ...pad.style, transformStyle: "preserve-3d" }}
+              style={{ ...pad.pos, transformStyle: "preserve-3d" }}
               onClick={() => onOpenModal && onOpenModal(padMemory)}
               whileHover={{ scale: 1.12, zIndex: 40 }}
             >
@@ -167,10 +167,13 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         })}
       </motion.div>
 
-      {/* Dynamic 3D Flying Card (Accurate Edge Landing) */}
+      {/* Dynamic 3D Flying Card (Smooth Interpolated Flight Arc) */}
       <motion.div
         className="absolute z-30 block pointer-events-auto cursor-pointer"
-        animate={currentPad.style}
+        animate={{
+          left: currentPad.pos.left,
+          top: currentPad.pos.top,
+        }}
         transition={{
           duration: 1.3,
           ease: [0.25, 1, 0.5, 1],
