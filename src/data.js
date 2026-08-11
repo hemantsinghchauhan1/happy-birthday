@@ -1,11 +1,8 @@
-const BASE = "https://customer-assets-4nw71qhi.emergentagent.net/job_7fb26c6a-6cc6-4515-b49d-d473ae161e4e/artifacts";
-const NB = "https://customer-assets-eiarnc6j.emergentagent.net/job_animated-tribute/artifacts";
-
 export const memories = [
   {
     id: 1,
     type: "image",
-    src: `${BASE}/l80xsmhf_IMG_20220415_103210.webp`,
+    src: "/images/card_1.webp",
     caption: "Jahaan se dosti shuru hui",
     sub: "Where our story began — 2022",
     accent: "magenta",
@@ -16,7 +13,7 @@ export const memories = [
   {
     id: 2,
     type: "image",
-    src: `${BASE}/epjrzdwm_IMG-20220308-WA0007.jpg`,
+    src: "/images/card_2.jpg",
     caption: "Chup si muskaan, gehri dosti",
     sub: "Some frames stay forever",
     accent: "violet",
@@ -27,7 +24,7 @@ export const memories = [
   {
     id: 3,
     type: "image",
-    src: `${BASE}/v8gmbgvt_IMG_20220417_010729.webp`,
+    src: "/images/card_3.webp",
     caption: "Raat ke us pal wale yaar",
     sub: "Late nights, endless laughs",
     accent: "cyan",
@@ -38,7 +35,7 @@ export const memories = [
   {
     id: 4,
     type: "image",
-    src: `${BASE}/hgot7qcb_IMG-20220516-WA0001.jpg`,
+    src: "/images/card_4.jpg",
     caption: "Teen dost, ek hi dil",
     sub: "The gang that felt like home",
     accent: "gold",
@@ -49,7 +46,7 @@ export const memories = [
   {
     id: 5,
     type: "image",
-    src: `${NB}/1wkcbfic_Screenshot%202026-08-12%20at%2012.30.43%E2%80%AFAM.png`,
+    src: "/images/card_5.png",
     caption: "Do yaar, ek muskaan",
     sub: "Bonds that only got stronger",
     accent: "magenta",
@@ -60,7 +57,7 @@ export const memories = [
   {
     id: 6,
     type: "image",
-    src: `${NB}/y4o1btek_Screenshot%202026-08-12%20at%2012.29.12%E2%80%AFAM.png`,
+    src: "/images/card_6.png",
     caption: "Jeet humesha saath mein",
     sub: "Winning, together — always",
     accent: "gold",
@@ -71,7 +68,7 @@ export const memories = [
   {
     id: 7,
     type: "image",
-    src: `${NB}/ydxcsaoj_Screenshot%202026-08-12%20at%2012.29.19%E2%80%AFAM.png`,
+    src: "/images/card_7.png",
     caption: "Safar ke saathi",
     sub: "Every adventure, side by side",
     accent: "cyan",
@@ -82,7 +79,7 @@ export const memories = [
   {
     id: 8,
     type: "image",
-    src: `${NB}/wpc1hsgp_Screenshot%202026-08-12%20at%2012.29.41%E2%80%AFAM.png`,
+    src: "/images/card_8.png",
     caption: "Rasto par khoya, khud ko paaya",
     sub: "Lost in the woods, found in memories",
     accent: "violet",
@@ -93,7 +90,7 @@ export const memories = [
   {
     id: 9,
     type: "image",
-    src: `${NB}/44kdzd7f_Screenshot%202026-08-12%20at%2012.29.58%E2%80%AFAM.png`,
+    src: "/images/card_9.png",
     caption: "Bulandiyon ka yaar",
     sub: "Reaching new heights",
     accent: "cyan",
@@ -104,7 +101,7 @@ export const memories = [
   {
     id: 10,
     type: "image",
-    src: `${BASE}/cfzretpy_Screenshot%202026-08-12%20at%2012.28.28%E2%80%AFAM.png`,
+    src: "/images/card_10.png",
     caption: "Sapno ke peeche daudta mera yaar",
     sub: "Dressed for the dreams he chases",
     accent: "magenta",
@@ -115,7 +112,7 @@ export const memories = [
   {
     id: 11,
     type: "image",
-    src: "/images/photo_11.jpg",
+    src: "/images/card_11.jpg",
     caption: "Muskurahat aur yaari",
     sub: "Chai, baatein, aur sachha yaar",
     accent: "gold",
@@ -126,7 +123,7 @@ export const memories = [
   {
     id: 12,
     type: "image",
-    src: "/images/photo_12.jpg",
+    src: "/images/card_12.jpg",
     caption: "Nadi kinare, suhaana safar",
     sub: "Standing tall by the river",
     accent: "cyan",
