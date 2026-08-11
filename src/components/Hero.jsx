@@ -4,13 +4,13 @@ import { memories } from "../data";
 
 const letterSurprises = ["💖", "🎉", "👑", "🎂", "✨", "⭐", "🎶", "🥳", "💫", "🔥", "🎈", "🎁"];
 
-// Letter-by-Letter 3D Animated Text Component with Infinite Staggered Wave & Interactive Hover Emojis
-function Animated3DText({ text, className, text3dStyle, delayOffset = 0, glowColor = "#2ee6d6" }) {
+// Letter-by-Letter 3D Animated Text Component with Mobile Touch & Desktop Mouse Support
+function Animated3DText({ text, className, text3dStyle, delayOffset = 0 }) {
   const letters = Array.from(text);
   const [hoveredIdx, setHoveredIdx] = useState(null);
 
   return (
-    <span className="inline-flex flex-wrap justify-center overflow-visible">
+    <span className="inline-flex flex-wrap justify-center overflow-visible select-none">
       {letters.map((char, index) => {
         const surpriseEmoji = letterSurprises[index % letterSurprises.length];
         const isHovered = hoveredIdx === index;
@@ -18,40 +18,40 @@ function Animated3DText({ text, className, text3dStyle, delayOffset = 0, glowCol
         return (
           <motion.span
             key={index}
+            onPointerDown={() => setHoveredIdx(index)}
+            onPointerUp={() => setTimeout(() => setHoveredIdx(null), 1200)}
             onMouseEnter={() => setHoveredIdx(index)}
             onMouseLeave={() => setHoveredIdx(null)}
-            onTouchStart={() => setHoveredIdx(index)}
-            onTouchEnd={() => setTimeout(() => setHoveredIdx(null), 1200)}
             animate={{
-              y: [0, -14, 0],
-              scale: [1, 1.18, 1],
-              rotateZ: [0, index % 2 === 0 ? 8 : -8, 0],
+              y: [0, -12, 0],
+              scale: [1, 1.16, 1],
+              rotateZ: [0, index % 2 === 0 ? 7 : -7, 0],
             }}
             transition={{
               repeat: Infinity,
               duration: 3.2,
-              delay: delayOffset + index * 0.15,
+              delay: delayOffset + index * 0.14,
               ease: "easeInOut",
             }}
             whileHover={{
-              y: -20,
-              scale: 1.3,
-              rotateZ: index % 2 === 0 ? 12 : -12,
+              y: -18,
+              scale: 1.25,
+              rotateZ: index % 2 === 0 ? 10 : -10,
               transition: { duration: 0.2 },
             }}
-            whileTap={{ scale: 1.35, y: -22 }}
+            whileTap={{ scale: 1.3, y: -20 }}
             className={`relative inline-block cursor-pointer transition-colors duration-200 ${className} ${text3dStyle} ${
               isHovered ? "text-[#2ee6d6] drop-shadow-[0_0_25px_#2ee6d6]" : ""
             }`}
-            style={{ transformStyle: "preserve-3d" }}
+            style={{ transformStyle: "preserve-3d", touchAction: "manipulation" }}
           >
-            {/* Surprise Emoji Badge Floating Above Letter on Hover/Tap */}
+            {/* Surprise Emoji Badge Floating Above Letter on Hover/Touch */}
             {isHovered && (
               <motion.span
                 initial={{ opacity: 0, y: 10, scale: 0.5 }}
-                animate={{ opacity: 1, y: -34, scale: 1.35 }}
+                animate={{ opacity: 1, y: -32, scale: 1.3 }}
                 exit={{ opacity: 0, scale: 0.5 }}
-                className="absolute left-1/2 -translate-x-1/2 pointer-events-none text-base sm:text-xl drop-shadow-lg z-50"
+                className="absolute left-1/2 -translate-x-1/2 pointer-events-none text-sm sm:text-xl drop-shadow-lg z-50"
               >
                 {surpriseEmoji}
               </motion.span>
@@ -65,12 +65,12 @@ function Animated3DText({ text, className, text3dStyle, delayOffset = 0, glowCol
   );
 }
 
-// 4 Corner Pad Positions
+// 4 Corner Pad Positions Optimized for Mobile & Desktop
 const padCoordinates = [
-  { id: 0, pos: { left: "1.5%", top: "4%" }, rot: -12, glow: "#ff2e83" },   // Top-Left
-  { id: 1, pos: { left: "74%", top: "4%" }, rot: 10, glow: "#2ee6d6" },    // Top-Right
-  { id: 2, pos: { left: "74%", top: "82%" }, rot: -8, glow: "#ffcf5c" },   // Bottom-Right
-  { id: 3, pos: { left: "1.5%", top: "82%" }, rot: 9, glow: "#8b5cff" },    // Bottom-Left
+  { id: 0, pos: { left: "2%", top: "4%" }, rot: -12, glow: "#ff2e83" },   // Top-Left
+  { id: 1, pos: { left: "68%", top: "4%" }, rot: 10, glow: "#2ee6d6" },   // Top-Right
+  { id: 2, pos: { left: "68%", top: "82%" }, rot: -8, glow: "#ffcf5c" },  // Bottom-Right
+  { id: 3, pos: { left: "2%", top: "82%" }, rot: 9, glow: "#8b5cff" },   // Bottom-Left
 ];
 
 // 4 Dynamic Flight Jump Styles
@@ -81,7 +81,7 @@ const jumpStyles = [
     anim: (padRot) => ({
       scale: [1, 0.25, 1.3, 1],
       rotateZ: [0, 540, 720, padRot],
-      y: [0, -140, -80, 0],
+      y: [0, -130, -70, 0],
       borderRadius: ["16px", "999px", "16px", "16px"],
     }),
   },
@@ -92,7 +92,7 @@ const jumpStyles = [
       scale: [1, 1.35, 0.8, 1],
       rotateZ: [0, -360, 360, padRot],
       rotateY: [0, 360, 720, 0],
-      y: [0, -150, -70, 0],
+      y: [0, -140, -60, 0],
       borderRadius: ["16px", "24px", "16px", "16px"],
     }),
   },
@@ -102,7 +102,7 @@ const jumpStyles = [
     anim: (padRot) => ({
       scale: [1, 1.45, 1.15, 1],
       rotateZ: [0, 25, -25, padRot],
-      y: [0, -180, -90, 0],
+      y: [0, -160, -80, 0],
       borderRadius: ["16px", "16px", "16px", "16px"],
     }),
   },
@@ -112,7 +112,7 @@ const jumpStyles = [
     anim: (padRot) => ({
       scale: [1, 0.35, 1.4, 1],
       rotateZ: [0, 45, 90, padRot],
-      y: [0, -200, -100, 0],
+      y: [0, -180, -90, 0],
       borderRadius: ["16px", "999px", "16px", "16px"],
     }),
   },
@@ -176,9 +176,9 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         <div className="absolute right-1/5 top-1/4 h-[45vh] w-[45vh] rounded-full bg-[#8b5cff]/25 blur-[130px]" />
       </div>
 
-      {/* 4 Corner Landing Pads */}
+      {/* 4 Corner Landing Pads (Stationary pads hide when activePad is occupied by flying card to prevent double ghosting!) */}
       <motion.div
-        className="absolute inset-0 z-10 block"
+        className="absolute inset-0 z-10 block pointer-events-none"
         style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}
       >
         {padCoordinates.map((pad, idx) => {
@@ -186,36 +186,35 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
           const isCurrentActive = idx === activePad;
 
           return (
-            <motion.div
+            <div
               key={pad.id}
-              className={`absolute cursor-pointer group transition-opacity duration-300 ${
-                isCurrentActive ? "opacity-0 pointer-events-none" : "opacity-100 pointer-events-auto"
+              className={`absolute cursor-pointer transition-opacity duration-300 pointer-events-auto ${
+                isCurrentActive ? "opacity-0 pointer-events-none" : "opacity-100"
               }`}
               style={{ ...pad.pos, transformStyle: "preserve-3d" }}
               onClick={() => onOpenModal && onOpenModal(padMemory)}
-              whileHover={{ scale: 1.12, zIndex: 40 }}
             >
               <div
-                className="relative w-[76px] sm:w-36 md:w-40 rounded-xl sm:rounded-2xl bg-white p-1 sm:p-2 shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-white/50"
+                className="relative w-[68px] sm:w-36 md:w-40 rounded-xl sm:rounded-2xl bg-white p-1 sm:p-2 shadow-[0_15px_40px_rgba(0,0,0,0.6)] border border-white/50"
                 style={{ transform: `rotate(${pad.rot}deg)` }}
               >
                 {/* Washi tape clip */}
                 <div className="washi-tape" />
 
-                <div className="relative h-24 sm:h-44 md:h-52 w-full overflow-hidden rounded-lg sm:rounded-xl bg-black">
-                  <img src={padMemory.src} alt="" className="h-full w-full object-cover group-hover:scale-108 transition-transform duration-500" />
+                <div className="relative h-20 sm:h-44 md:h-52 w-full overflow-hidden rounded-lg sm:rounded-xl bg-black">
+                  <img src={padMemory.src} alt="" className="h-full w-full object-cover" />
                   <div className="absolute bottom-0.5 left-0.5 right-0.5 sm:bottom-1.5 sm:left-1.5 sm:right-1.5 rounded bg-black/75 px-1 py-0.5 sm:px-2 sm:py-1 text-[7px] sm:text-[10px] font-bold text-white backdrop-blur-md truncate text-left border border-white/10">
                     <span className="text-[#2ee6d6] mr-0.5 sm:mr-1">#{String(padMemory.id).padStart(2, "0")}</span>
                     {padMemory.caption}
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           );
         })}
       </motion.div>
 
-      {/* Single Dynamic 3D Flying Card */}
+      {/* Single Dynamic 3D Flying Card (Mobile & Desktop Hardware Accelerated Flight) */}
       <motion.div
         className="absolute z-30 block pointer-events-auto cursor-pointer"
         animate={{
@@ -236,7 +235,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
             ease: "easeInOut",
             times: [0, 0.3, 0.7, 1],
           }}
-          className="relative w-[76px] sm:w-36 md:w-40 rounded-xl sm:rounded-2xl bg-white p-1 sm:p-2 shadow-[0_30px_90px_rgba(255,46,131,0.8)] border-2 border-[#ff2e83] overflow-hidden"
+          className="relative w-[68px] sm:w-36 md:w-40 rounded-xl sm:rounded-2xl bg-white p-1 sm:p-2 shadow-[0_25px_70px_rgba(255,46,131,0.8)] border-2 border-[#ff2e83] overflow-hidden"
         >
           {/* Dynamic Flight Style Badge */}
           <div className="absolute -top-1.5 -right-1.5 sm:-top-3 sm:-right-3 z-40 flex h-5 w-5 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-gradient-to-r from-[#ff2e83] to-[#2ee6d6] text-white text-[9px] sm:text-sm font-bold shadow-xl animate-pulse">
@@ -246,7 +245,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
           {/* Washi tape clip */}
           <div className="washi-tape" />
 
-          <div className="relative h-24 sm:h-44 md:h-52 w-full overflow-hidden rounded-lg sm:rounded-xl bg-black">
+          <div className="relative h-20 sm:h-44 md:h-52 w-full overflow-hidden rounded-lg sm:rounded-xl bg-black">
             <img
               src={activeMemory.src}
               alt={activeMemory.caption}
@@ -308,7 +307,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
       </div>
 
       {/* Main Hero Title Area */}
-      <div className="relative z-20 flex min-h-screen flex-col items-center justify-center px-4 sm:px-6 text-center py-16 sm:py-0">
+      <div className="relative z-20 flex min-h-screen flex-col items-center justify-center px-3 sm:px-6 text-center py-14 sm:py-0">
         {/* Crown Badge */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
