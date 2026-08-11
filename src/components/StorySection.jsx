@@ -67,7 +67,7 @@ export default function StorySection() {
           Yaadon Ka <span className="font-serif-i italic normal-case text-[#ff2e83]">Khaas Kona</span>
         </h2>
         <p className="mt-3 max-w-xl text-sm sm:text-base text-white/75 leading-relaxed">
-          Zindagi ke hazaron panno mein se sabse sunehra panna — Mithlesh aur meri yaari.
+          Zindagi ke hazaron panno mein se sabse sunehra panna — teri dosti.
         </p>
       </motion.div>
 
