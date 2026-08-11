@@ -17,23 +17,23 @@ function Line({ children, i, className }) {
   );
 }
 
-// 4 Corner Pad Positions using consistent left/top percentages so Framer Motion can interpolate flight arcs
+// 4 Corner Pad Positions
 const padCoordinates = [
-  { id: 0, pos: { left: "3%", top: "12%" }, rot: -12, glow: "#ff2e83" },   // Far Top-Left
-  { id: 1, pos: { left: "76%", top: "12%" }, rot: 10, glow: "#2ee6d6" },   // Far Top-Right (76% left clears title!)
-  { id: 2, pos: { left: "76%", top: "68%" }, rot: -8, glow: "#ffcf5c" },  // Far Bottom-Right (clears CTAs!)
-  { id: 3, pos: { left: "3%", top: "66%" }, rot: 9, glow: "#8b5cff" },    // Far Bottom-Left
+  { id: 0, pos: { left: "3%", top: "12%" }, rot: -12, glow: "#ff2e83" },   // Top-Left
+  { id: 1, pos: { left: "76%", top: "12%" }, rot: 10, glow: "#2ee6d6" },   // Top-Right
+  { id: 2, pos: { left: "76%", top: "68%" }, rot: -8, glow: "#ffcf5c" },  // Bottom-Right
+  { id: 3, pos: { left: "3%", top: "66%" }, rot: 9, glow: "#8b5cff" },    // Bottom-Left
 ];
 
-// 4 Dynamic Jump Flight Styles
+// 4 Dynamic Flight Jump Styles
 const jumpStyles = [
   {
     name: "Paper Airplane Flight ✈️",
     badge: "✈️",
     anim: (padRot) => ({
-      scale: [1, 0.2, 1.35, 1],
+      scale: [1, 0.25, 1.3, 1],
       rotateZ: [0, 540, 720, padRot],
-      y: [0, -140, -90, 0],
+      y: [0, -140, -80, 0],
       borderRadius: ["16px", "999px", "16px", "16px"],
     }),
   },
@@ -41,10 +41,10 @@ const jumpStyles = [
     name: "3D Corkscrew Spin 🌀",
     badge: "🌀",
     anim: (padRot) => ({
-      scale: [1, 1.4, 0.8, 1],
+      scale: [1, 1.35, 0.8, 1],
       rotateZ: [0, -360, 360, padRot],
       rotateY: [0, 360, 720, 0],
-      y: [0, -160, -80, 0],
+      y: [0, -150, -70, 0],
       borderRadius: ["16px", "24px", "16px", "16px"],
     }),
   },
@@ -52,9 +52,9 @@ const jumpStyles = [
     name: "Frog Super Leap 🐸",
     badge: "🐸",
     anim: (padRot) => ({
-      scale: [1, 1.5, 1.2, 1],
+      scale: [1, 1.45, 1.15, 1],
       rotateZ: [0, 25, -25, padRot],
-      y: [0, -190, -100, 0],
+      y: [0, -180, -90, 0],
       borderRadius: ["16px", "16px", "16px", "16px"],
     }),
   },
@@ -62,9 +62,9 @@ const jumpStyles = [
     name: "Rocket Speed Zoom 🚀",
     badge: "🚀",
     anim: (padRot) => ({
-      scale: [1, 0.3, 1.45, 1],
+      scale: [1, 0.35, 1.4, 1],
       rotateZ: [0, 45, 90, padRot],
-      y: [0, -210, -110, 0],
+      y: [0, -200, -100, 0],
       borderRadius: ["16px", "999px", "16px", "16px"],
     }),
   },
@@ -74,6 +74,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
   const [activePad, setActivePad] = useState(0); // 0, 1, 2, 3
   const [photoOffset, setPhotoOffset] = useState(0);
   const [jumpStyleIdx, setJumpStyleIdx] = useState(0);
+  const [landedPad, setLandedPad] = useState(0); // Updates ONLY after flight completes!
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -88,20 +89,22 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
     my.set((e.clientY - r.top) / r.height - 0.5);
   };
 
-  // Dynamic Jump Timer every 3.5 seconds
+  // Jump Interval: Launches flight every 4.2 seconds
   useEffect(() => {
     const timer = setInterval(() => {
-      setActivePad((prev) => {
-        const nextPad = (prev + 1) % 4;
-        if (nextPad === 0) {
-          setPhotoOffset((po) => (po + 1) % memories.length);
-        }
-        return nextPad;
-      });
+      setActivePad((prev) => (prev + 1) % 4);
       setJumpStyleIdx((prev) => (prev + 1) % jumpStyles.length);
-    }, 3500);
+    }, 4200);
     return () => clearInterval(timer);
   }, []);
+
+  // Called ONLY when the 3D flight animation lands cleanly into the destination pad!
+  const handleFlightComplete = () => {
+    setLandedPad(activePad);
+    if (activePad === 0) {
+      setPhotoOffset((po) => (po + 1) % memories.length);
+    }
+  };
 
   const currentPad = padCoordinates[activePad];
   const activeMemory = memories[(photoOffset + activePad) % memories.length];
@@ -135,7 +138,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
       >
         {padCoordinates.map((pad, idx) => {
           const padMemory = memories[(photoOffset + idx) % memories.length];
-          const isCurrentActive = idx === activePad;
+          const isLandedHere = idx === landedPad;
 
           return (
             <motion.div
@@ -146,8 +149,8 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
               whileHover={{ scale: 1.12, zIndex: 40 }}
             >
               <div
-                className={`relative w-24 sm:w-36 md:w-40 rounded-2xl bg-white p-1.5 sm:p-2 shadow-[0_20px_50px_rgba(0,0,0,0.6)] transition-all duration-300 ${
-                  isCurrentActive ? "ring-2 sm:ring-4 ring-[#ff2e83] shadow-[0_0_30px_rgba(255,46,131,0.5)]" : "border border-white/50"
+                className={`relative w-24 sm:w-36 md:w-40 rounded-2xl bg-white p-1.5 sm:p-2 shadow-[0_20px_50px_rgba(0,0,0,0.6)] transition-all duration-500 ${
+                  isLandedHere ? "ring-2 sm:ring-4 ring-[#ff2e83] shadow-[0_0_35px_rgba(255,46,131,0.6)] scale-102" : "border border-white/50"
                 }`}
                 style={{ transform: `rotate(${pad.rot}deg)` }}
               >
@@ -167,7 +170,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         })}
       </motion.div>
 
-      {/* Dynamic 3D Flying Card (Smooth Interpolated Flight Arc) */}
+      {/* Dynamic 3D Flying Card (Carries Photo & Submerges ONLY after Landing!) */}
       <motion.div
         className="absolute z-30 block pointer-events-auto cursor-pointer"
         animate={{
@@ -175,16 +178,17 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
           top: currentPad.pos.top,
         }}
         transition={{
-          duration: 1.3,
+          duration: 1.4,
           ease: [0.25, 1, 0.5, 1],
         }}
+        onAnimationComplete={handleFlightComplete}
         onClick={() => onOpenModal && onOpenModal(activeMemory)}
       >
         <motion.div
-          key={`${photoOffset}-${activePad}-${jumpStyleIdx}`}
+          key={`${activePad}-${jumpStyleIdx}`}
           animate={currentJumpStyle.anim(currentPad.rot)}
           transition={{
-            duration: 1.3,
+            duration: 1.4,
             ease: "easeInOut",
             times: [0, 0.3, 0.7, 1],
           }}
@@ -199,18 +203,11 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
           <div className="washi-tape" />
 
           <div className="relative h-32 sm:h-44 md:h-52 w-full overflow-hidden rounded-xl bg-black">
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={activeMemory.id}
-                src={activeMemory.src}
-                alt={activeMemory.caption}
-                initial={{ opacity: 0, scale: 1.3 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.3 }}
-                transition={{ duration: 0.4 }}
-                className="h-full w-full object-cover"
-              />
-            </AnimatePresence>
+            <img
+              src={activeMemory.src}
+              alt={activeMemory.caption}
+              className="h-full w-full object-cover"
+            />
 
             <div className="absolute bottom-1 left-1 right-1 sm:bottom-1.5 sm:left-1.5 sm:right-1.5 rounded-lg bg-black/85 px-1.5 py-0.5 sm:px-2 sm:py-1 text-[8px] sm:text-[10px] font-extrabold text-white backdrop-blur-md truncate text-left border border-white/20">
               <span className="text-[#2ee6d6] mr-1">#{String(activeMemory.id).padStart(2, "0")}</span>
