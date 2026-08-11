@@ -1,28 +1,69 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { memories } from "../data";
 
-const reveal = {
-  hidden: { y: "115%" },
-  show: (i) => ({ y: 0, transition: { delay: 0.2 + i * 0.12, duration: 0.9, ease: [0.16, 1, 0.3, 1] } }),
-};
+// Letter-by-Letter 3D Animated Text Component
+function Animated3DText({ text, className, text3dStyle, delayOffset = 0 }) {
+  const letters = Array.from(text);
 
-function Line({ children, i, className }) {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.05,
+        delayChildren: delayOffset,
+      },
+    },
+  };
+
+  const letterVariants = {
+    hidden: { opacity: 0, y: 40, rotateX: -90, scale: 0.3 },
+    show: {
+      opacity: 1,
+      y: 0,
+      rotateX: 0,
+      scale: 1,
+      transition: {
+        duration: 0.6,
+        ease: [0.16, 1, 0.3, 1],
+      },
+    },
+  };
+
   return (
-    <span className="block overflow-hidden">
-      <motion.span variants={reveal} custom={i} initial="hidden" animate="show" className={`block ${className}`}>
-        {children}
-      </motion.span>
-    </span>
+    <motion.span
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      className="inline-flex flex-wrap justify-center overflow-visible"
+    >
+      {letters.map((char, index) => (
+        <motion.span
+          key={index}
+          variants={letterVariants}
+          whileHover={{
+            y: -14,
+            scale: 1.22,
+            rotateZ: index % 2 === 0 ? 8 : -8,
+            transition: { duration: 0.2 },
+          }}
+          className={`inline-block cursor-pointer transition-colors duration-200 ${className} ${text3dStyle}`}
+          style={{ transformStyle: "preserve-3d" }}
+        >
+          {char === " " ? "\u00A0" : char}
+        </motion.span>
+      ))}
+    </motion.span>
   );
 }
 
-// 4 Corner Pad Positions with Mobile-First Precision Coordinates (0 overlap on mobile & desktop!)
+// 4 Corner Pad Positions
 const padCoordinates = [
-  { id: 0, pos: { left: "1.5%", top: "4%" }, rot: -12, glow: "#ff2e83" },   // Far Top-Left
-  { id: 1, pos: { left: "74%", top: "4%" }, rot: 10, glow: "#2ee6d6" },    // Far Top-Right
-  { id: 2, pos: { left: "74%", top: "82%" }, rot: -8, glow: "#ffcf5c" },   // Far Bottom-Right (Below CTAs)
-  { id: 3, pos: { left: "1.5%", top: "82%" }, rot: 9, glow: "#8b5cff" },    // Far Bottom-Left (Below CTAs)
+  { id: 0, pos: { left: "1.5%", top: "4%" }, rot: -12, glow: "#ff2e83" },   // Top-Left
+  { id: 1, pos: { left: "74%", top: "4%" }, rot: 10, glow: "#2ee6d6" },    // Top-Right
+  { id: 2, pos: { left: "74%", top: "82%" }, rot: -8, glow: "#ffcf5c" },   // Bottom-Right
+  { id: 3, pos: { left: "1.5%", top: "82%" }, rot: 9, glow: "#8b5cff" },    // Bottom-Left
 ];
 
 // 4 Dynamic Flight Jump Styles
@@ -128,7 +169,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         <div className="absolute right-1/5 top-1/4 h-[45vh] w-[45vh] rounded-full bg-[#8b5cff]/25 blur-[130px]" />
       </div>
 
-      {/* 4 Corner Landing Pads (Stationary pads hide when activePad is occupied by flying card to prevent double ghosting!) */}
+      {/* 4 Corner Landing Pads */}
       <motion.div
         className="absolute inset-0 z-10 block"
         style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}
@@ -167,7 +208,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         })}
       </motion.div>
 
-      {/* Single Dynamic 3D Flying Card (Responsive & 0 Overlap!) */}
+      {/* Single Dynamic 3D Flying Card */}
       <motion.div
         className="absolute z-30 block pointer-events-auto cursor-pointer"
         animate={{
@@ -271,19 +312,41 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
           <span className="text-xs sm:text-base">👑</span> 12 AUGUST · HAPPIEST BIRTHDAY <span className="text-xs sm:text-base">✨</span>
         </motion.div>
 
-        {/* 3D Extruded Title */}
+        {/* Letter-by-Letter 3D Extruded Animated Title */}
         <motion.div style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}>
           <h1 className="font-extrabold uppercase leading-[0.86] tracking-tight">
-            <Line i={0} className="text-4xl sm:text-6xl lg:text-7xl text-[#f4efe6]">Happy</Line>
-            <Line i={1} className="text-5xl sm:text-7xl lg:text-8xl text-[#ff2e83] text-3d-title">Birthday</Line>
-            <Line i={2} className="font-serif-i italic normal-case text-5xl sm:text-7xl lg:text-8xl text-[#ffcf5c] text-3d-gold">Mithlesh</Line>
+            <span className="block">
+              <Animated3DText
+                text="HAPPY"
+                className="text-4xl sm:text-6xl lg:text-7xl text-[#f4efe6]"
+                delayOffset={0.2}
+              />
+            </span>
+
+            <span className="block mt-1 sm:mt-2">
+              <Animated3DText
+                text="BIRTHDAY"
+                className="text-5xl sm:text-7xl lg:text-8xl text-[#ff2e83]"
+                text3dStyle="text-3d-title"
+                delayOffset={0.5}
+              />
+            </span>
+
+            <span className="block mt-1 sm:mt-2">
+              <Animated3DText
+                text="Mithlesh"
+                className="font-serif-i italic normal-case text-5xl sm:text-7xl lg:text-8xl text-[#ffcf5c]"
+                text3dStyle="text-3d-gold"
+                delayOffset={0.8}
+              />
+            </span>
           </h1>
         </motion.div>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.1, duration: 0.8 }}
+          transition={{ delay: 1.4, duration: 0.8 }}
           className="mt-6 sm:mt-8 max-w-[260px] sm:max-w-md text-xs sm:text-base text-white/80 leading-relaxed"
         >
           Mere pehle dost ke liye ek chhoti si duniya — banayi gayi yaadon, hansi aur dosti se. 💖
@@ -293,7 +356,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.4 }}
+          transition={{ delay: 1.6 }}
           className="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4"
         >
           <button
@@ -315,7 +378,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.7 }}
+          transition={{ delay: 1.8 }}
           className="mt-8 sm:mt-14 flex flex-col items-center gap-1 text-white/50"
         >
           <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em]">scroll down for memories & songs</span>
