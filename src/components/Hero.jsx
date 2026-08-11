@@ -17,12 +17,12 @@ function Line({ children, i, className }) {
   );
 }
 
-// 4 Fixed Landing Pads Coordinates (Percentage based)
+// 4 Fixed Landing Pads Coordinates
 const padCoordinates = [
-  { id: 0, x: "4vw", y: "12vh", rot: -12, name: "Top-Left" },
-  { id: 1, x: "72vw", y: "14vh", rot: 10, name: "Top-Right" },
-  { id: 2, x: "70vw", y: "62vh", rot: -8, name: "Bottom-Right" },
-  { id: 3, x: "4vw", y: "60vh", rot: 9, name: "Bottom-Left" },
+  { id: 0, x: "4vw", y: "12vh", rot: -12, name: "Top-Left", glow: "#ff2e83" },
+  { id: 1, x: "72vw", y: "14vh", rot: 10, name: "Top-Right", glow: "#2ee6d6" },
+  { id: 2, x: "70vw", y: "62vh", rot: -8, name: "Bottom-Right", glow: "#ffcf5c" },
+  { id: 3, x: "4vw", y: "60vh", rot: 9, name: "Bottom-Left", glow: "#8b5cff" },
 ];
 
 export default function Hero({ music, cardAudio, onOpenModal }) {
@@ -31,10 +31,10 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const sx = useSpring(mx, { stiffness: 60, damping: 20 });
-  const sy = useSpring(my, { stiffness: 60, damping: 20 });
-  const rotX = useTransform(sy, [-0.5, 0.5], [10, -10]);
-  const rotY = useTransform(sx, [-0.5, 0.5], [-12, 12]);
+  const sx = useSpring(mx, { stiffness: 70, damping: 20 });
+  const sy = useSpring(my, { stiffness: 70, damping: 20 });
+  const rotX = useTransform(sy, [-0.5, 0.5], [12, -12]);
+  const rotY = useTransform(sx, [-0.5, 0.5], [-14, 14]);
 
   const onMove = (e) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -80,43 +80,51 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         <div className="absolute right-1/5 top-1/4 h-[45vh] w-[45vh] rounded-full bg-[#8b5cff]/25 blur-[130px]" />
       </div>
 
-      {/* 4 Fixed Landing Pads */}
-      <div className="absolute inset-0 z-10 hidden md:block pointer-events-none">
+      {/* 4 Interactive Dynamic 3D Corner Cards */}
+      <motion.div
+        className="absolute inset-0 z-10 hidden md:block"
+        style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}
+      >
         {padCoordinates.map((pad, idx) => {
           const padMemory = memories[(photoOffset + idx) % memories.length];
           const isCurrentActive = idx === activePad;
 
           return (
-            <div
+            <motion.div
               key={pad.id}
-              className="absolute pointer-events-auto cursor-pointer group"
-              style={{ left: pad.x, top: pad.y }}
+              className="absolute cursor-pointer group"
+              style={{ left: pad.x, top: pad.y, transformStyle: "preserve-3d" }}
               onClick={() => onOpenModal && onOpenModal(padMemory)}
+              whileHover={{ scale: 1.12, zIndex: 40 }}
             >
               <div
-                className={`w-32 sm:w-40 md:w-44 rounded-2xl p-2 transition-all duration-500 ${
-                  isCurrentActive
-                    ? "bg-white ring-4 ring-[#ff2e83] shadow-[0_0_40px_rgba(255,46,131,0.6)] scale-105"
-                    : "bg-white/70 opacity-60 shadow-xl group-hover:opacity-100 group-hover:scale-105"
-                }`}
+                className={`relative w-32 sm:w-40 md:w-44 rounded-2xl bg-white p-2 shadow-[0_25px_60px_rgba(0,0,0,0.7)] transition-all duration-300 group-hover:shadow-[0_30px_70px_rgba(255,46,131,0.4)] border border-white/50`}
                 style={{ transform: `rotate(${pad.rot}deg)` }}
               >
                 {/* Washi tape clip */}
                 <div className="washi-tape" />
 
+                {/* Spinning Vinyl record peek behind card */}
+                <div className="absolute -right-3 top-6 z-0 h-20 w-20 rounded-full bg-black p-1 shadow-lg border border-white/10 opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-3 spin-vinyl">
+                  <div className="flex h-full w-full items-center justify-center rounded-full bg-[#ff2e83]/30">
+                    <div className="h-5 w-5 rounded-full bg-zinc-900" />
+                  </div>
+                </div>
+
                 <div className="relative h-44 sm:h-52 w-full overflow-hidden rounded-xl bg-black">
-                  <img src={padMemory.src} alt="" className="h-full w-full object-cover" />
-                  <div className="absolute bottom-1.5 left-1.5 right-1.5 rounded-lg bg-black/75 px-2 py-1 text-[10px] font-bold text-white backdrop-blur-md truncate text-left">
-                    #{String(padMemory.id).padStart(2, "0")} {padMemory.caption}
+                  <img src={padMemory.src} alt="" className="h-full w-full object-cover group-hover:scale-108 transition-transform duration-500" />
+                  <div className="absolute bottom-1.5 left-1.5 right-1.5 rounded-lg bg-black/75 px-2 py-1 text-[10px] font-bold text-white backdrop-blur-md truncate text-left border border-white/10">
+                    <span className="text-[#2ee6d6] mr-1">#{String(padMemory.id).padStart(2, "0")}</span>
+                    {padMemory.caption}
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
 
-      {/* 3D Paper Crumple -> Paper Airplane Flight Arc -> Polaroid Unfold Landing Container */}
+      {/* Dynamic 3D Flying Card (Paper Plane Flight Arc) */}
       <motion.div
         className="absolute z-30 hidden md:block pointer-events-auto cursor-pointer"
         animate={{
@@ -131,7 +139,6 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
       >
         <motion.div
           animate={{
-            // 3-Phase Animation: 1. Crumple -> 2. Soar in Flight Arc -> 3. Unfold & Land
             scale: [1, 0.2, 1.35, 1],
             rotateZ: [0, 540, 720, currentPad.rot],
             y: [0, -140, -100, 0],
@@ -144,7 +151,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
           }}
           className="relative w-36 sm:w-44 md:w-48 rounded-2xl bg-white p-2.5 shadow-[0_30px_90px_rgba(255,46,131,0.8)] border-2 border-[#ff2e83] overflow-hidden"
         >
-          {/* Flying Jet Trail Badge */}
+          {/* Flying Jet Badge */}
           <div className="absolute -top-3 -right-3 z-40 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-r from-[#ff2e83] to-[#2ee6d6] text-white text-base font-bold shadow-xl animate-pulse">
             ✈️
           </div>
