@@ -149,14 +149,13 @@ export default function PhotoModal({ item, onClose, isPlaying, onToggleAudio }) 
                     </button>
                   </div>
 
-                  {/* Equalizer animation when playing */}
+                  {/* 100% Static Playing Track Audio Indicator (Fixed Height h-7 = 0 Jitter!) */}
                   {isPlaying && (
-                    <div className="mt-3 flex items-center justify-center gap-1 border-t border-white/10 pt-2.5">
-                      <div className="w-1 bg-[#2ee6d6] rounded-full animate-eq-1" />
-                      <div className="w-1 bg-[#ff2e83] rounded-full animate-eq-2" />
-                      <div className="w-1 bg-[#ffcf5c] rounded-full animate-eq-3" />
-                      <div className="w-1 bg-[#8b5cff] rounded-full animate-eq-4" />
-                      <div className="w-1 bg-[#2ee6d6] rounded-full animate-eq-1" />
+                    <div className="mt-3 flex items-center justify-center gap-1.5 border-t border-white/10 pt-2.5 h-7">
+                      <div className="w-1 h-3 bg-[#2ee6d6] rounded-full" />
+                      <div className="w-1 h-4 bg-[#ff2e83] rounded-full" />
+                      <div className="w-1 h-2.5 bg-[#ffcf5c] rounded-full" />
+                      <div className="w-1 h-3.5 bg-[#8b5cff] rounded-full" />
                       <span className="ml-2 text-[10px] sm:text-xs text-[#2ee6d6] font-semibold">Playing track audio...</span>
                     </div>
                   )}
