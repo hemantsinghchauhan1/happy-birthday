@@ -17,15 +17,15 @@ function Line({ children, i, className }) {
   );
 }
 
-// 4 Responsive Landing Pads Coordinates (Works on Mobile & Desktop)
+// 4 Corner Pad Positions pushed to the extreme screen corners (0 overlap with title)
 const padCoordinates = [
-  { id: 0, x: "2vw", y: "8vh", rot: -12, glow: "#ff2e83" },   // Top-Left
-  { id: 1, x: "58vw", y: "9vh", rot: 10, glow: "#2ee6d6" },   // Top-Right
-  { id: 2, x: "56vw", y: "62vh", rot: -8, glow: "#ffcf5c" },  // Bottom-Right
-  { id: 3, x: "2vw", y: "60vh", rot: 9, glow: "#8b5cff" },   // Bottom-Left
+  { id: 0, style: { left: "3%", top: "12%" }, rot: -12, glow: "#ff2e83" },   // Far Top-Left
+  { id: 1, style: { right: "3%", top: "12%" }, rot: 10, glow: "#2ee6d6" },   // Far Top-Right
+  { id: 2, style: { right: "4%", bottom: "10%" }, rot: -8, glow: "#ffcf5c" }, // Far Bottom-Right
+  { id: 3, style: { left: "4%", bottom: "10%" }, rot: 9, glow: "#8b5cff" },   // Far Bottom-Left
 ];
 
-// 4 Dynamic Jump Styles with distinct animations & badges
+// 4 Dynamic Jump Styles
 const jumpStyles = [
   {
     name: "Paper Airplane Flight ✈️",
@@ -88,7 +88,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
     my.set((e.clientY - r.top) / r.height - 0.5);
   };
 
-  // Dynamic Jump Timer: Rotates pads & switches jump styles every 3.5 seconds!
+  // Dynamic Jump Timer every 3.5 seconds
   useEffect(() => {
     const timer = setInterval(() => {
       setActivePad((prev) => {
@@ -128,7 +128,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         <div className="absolute right-1/5 top-1/4 h-[45vh] w-[45vh] rounded-full bg-[#8b5cff]/25 blur-[130px]" />
       </div>
 
-      {/* 4 Responsive Dynamic 3D Corner Cards (Visible on Mobile & Desktop) */}
+      {/* 4 Corner Landing Pads (Pushed to far edges) */}
       <motion.div
         className="absolute inset-0 z-10 block"
         style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}
@@ -141,12 +141,12 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
             <motion.div
               key={pad.id}
               className="absolute cursor-pointer group"
-              style={{ left: pad.x, top: pad.y, transformStyle: "preserve-3d" }}
+              style={{ ...pad.style, transformStyle: "preserve-3d" }}
               onClick={() => onOpenModal && onOpenModal(padMemory)}
               whileHover={{ scale: 1.12, zIndex: 40 }}
             >
               <div
-                className={`relative w-20 sm:w-36 md:w-44 rounded-2xl bg-white p-1.5 sm:p-2 shadow-[0_20px_50px_rgba(0,0,0,0.6)] transition-all duration-300 ${
+                className={`relative w-24 sm:w-36 md:w-40 rounded-2xl bg-white p-1.5 sm:p-2 shadow-[0_20px_50px_rgba(0,0,0,0.6)] transition-all duration-300 ${
                   isCurrentActive ? "ring-2 sm:ring-4 ring-[#ff2e83] shadow-[0_0_30px_rgba(255,46,131,0.5)]" : "border border-white/50"
                 }`}
                 style={{ transform: `rotate(${pad.rot}deg)` }}
@@ -154,7 +154,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
                 {/* Washi tape clip */}
                 <div className="washi-tape" />
 
-                <div className="relative h-28 sm:h-44 md:h-52 w-full overflow-hidden rounded-xl bg-black">
+                <div className="relative h-32 sm:h-44 md:h-52 w-full overflow-hidden rounded-xl bg-black">
                   <img src={padMemory.src} alt="" className="h-full w-full object-cover group-hover:scale-108 transition-transform duration-500" />
                   <div className="absolute bottom-1 left-1 right-1 sm:bottom-1.5 sm:left-1.5 sm:right-1.5 rounded-lg bg-black/75 px-1.5 py-0.5 sm:px-2 sm:py-1 text-[8px] sm:text-[10px] font-bold text-white backdrop-blur-md truncate text-left border border-white/10">
                     <span className="text-[#2ee6d6] mr-0.5 sm:mr-1">#{String(padMemory.id).padStart(2, "0")}</span>
@@ -167,13 +167,10 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         })}
       </motion.div>
 
-      {/* Dynamic 3D Jumping Card with Multi-Style Flight Animations (Visible on Mobile & Desktop) */}
+      {/* Dynamic 3D Flying Card (Accurate Edge Landing) */}
       <motion.div
         className="absolute z-30 block pointer-events-auto cursor-pointer"
-        animate={{
-          left: currentPad.x,
-          top: currentPad.y,
-        }}
+        animate={currentPad.style}
         transition={{
           duration: 1.3,
           ease: [0.25, 1, 0.5, 1],
@@ -188,17 +185,17 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
             ease: "easeInOut",
             times: [0, 0.3, 0.7, 1],
           }}
-          className="relative w-[88px] sm:w-40 md:w-48 rounded-2xl bg-white p-1.5 sm:p-2.5 shadow-[0_30px_90px_rgba(255,46,131,0.8)] border-2 border-[#ff2e83] overflow-hidden"
+          className="relative w-24 sm:w-36 md:w-40 rounded-2xl bg-white p-1.5 sm:p-2 shadow-[0_30px_90px_rgba(255,46,131,0.8)] border-2 border-[#ff2e83] overflow-hidden"
         >
           {/* Dynamic Flight Style Badge */}
-          <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 z-40 flex h-6 w-6 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-gradient-to-r from-[#ff2e83] to-[#2ee6d6] text-white text-xs sm:text-base font-bold shadow-xl animate-pulse">
+          <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 z-40 flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-gradient-to-r from-[#ff2e83] to-[#2ee6d6] text-white text-xs sm:text-sm font-bold shadow-xl animate-pulse">
             {currentJumpStyle.badge}
           </div>
 
           {/* Washi tape clip */}
           <div className="washi-tape" />
 
-          <div className="relative h-32 sm:h-52 md:h-60 w-full overflow-hidden rounded-xl bg-black">
+          <div className="relative h-32 sm:h-44 md:h-52 w-full overflow-hidden rounded-xl bg-black">
             <AnimatePresence mode="wait">
               <motion.img
                 key={activeMemory.id}
@@ -212,7 +209,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
               />
             </AnimatePresence>
 
-            <div className="absolute bottom-1 left-1 right-1 sm:bottom-2 sm:left-2 sm:right-2 rounded-lg bg-black/85 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-xs font-extrabold text-white backdrop-blur-md truncate text-left border border-white/20">
+            <div className="absolute bottom-1 left-1 right-1 sm:bottom-1.5 sm:left-1.5 sm:right-1.5 rounded-lg bg-black/85 px-1.5 py-0.5 sm:px-2 sm:py-1 text-[8px] sm:text-[10px] font-extrabold text-white backdrop-blur-md truncate text-left border border-white/20">
               <span className="text-[#2ee6d6] mr-1">#{String(activeMemory.id).padStart(2, "0")}</span>
               {activeMemory.caption}
             </div>
