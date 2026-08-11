@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { fireConfetti } from "./Confetti";
 
 const glow = { magenta: "#ff2e83", cyan: "#2ee6d6", gold: "#ffcf5c", violet: "#8b5cff" };
 
 export default function TiltCard({ item, index, isPlaying, onToggleAudio, onOpenModal }) {
+  const [isRevealed, setIsRevealed] = useState(false);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const sx = useSpring(mx, { stiffness: 150, damping: 15 });
@@ -19,13 +22,22 @@ export default function TiltCard({ item, index, isPlaying, onToggleAudio, onOpen
   const reset = () => { mx.set(0); my.set(0); };
 
   const handleCardClick = (e) => {
-    // If user clicked the play audio button, handle audio
+    // If card is not revealed yet, unwrap it as a surprise!
+    if (!isRevealed) {
+      fireConfetti();
+      setIsRevealed(true);
+      onToggleAudio(item.id, item.audioKey);
+      return;
+    }
+
+    // If user clicked the audio play/pause button
     if (e.target.closest(".audio-btn")) {
       e.stopPropagation();
       onToggleAudio(item.id, item.audioKey);
       return;
     }
-    // Otherwise open modal view
+
+    // Otherwise open detail modal
     onOpenModal(item);
   };
 
@@ -73,71 +85,98 @@ export default function TiltCard({ item, index, isPlaying, onToggleAudio, onOpen
         />
 
         {/* Photo Container */}
-        <div className="relative overflow-hidden rounded-xl bg-black">
-          <img
-            src={item.src}
-            alt={item.caption}
-            className="aspect-[3/4] w-full object-cover transition-transform duration-700 group-hover:scale-105"
-            loading="lazy"
-          />
-
-          {/* Floating musical note indicator if active */}
-          {isPlaying && (
-            <div className="absolute inset-0 z-20 pointer-events-none flex items-center justify-center">
-              <motion.div
-                animate={{ y: [-10, -50], opacity: [1, 0], scale: [0.8, 1.4] }}
-                transition={{ repeat: Infinity, duration: 1.5, ease: "easeOut" }}
-                className="text-4xl"
-              >
-                🎵
-              </motion.div>
-            </div>
-          )}
-
-          {/* Song Badge overlay on top */}
-          <div className="absolute left-3 top-3 z-30 flex items-center gap-2 rounded-full bg-black/75 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md border border-white/20">
-            <span className={isPlaying ? "animate-spin text-[#ff2e83]" : "text-[#2ee6d6]"}>🎵</span>
-            <span className="truncate max-w-[150px]">{item.songTitle}</span>
-          </div>
-
-          {/* Floating audio trigger button */}
-          <button
-            className="audio-btn absolute right-3 top-3 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-[#ff2e83] text-white shadow-lg transition hover:scale-110 active:scale-95"
-            title="Play Card Song"
-          >
-            {isPlaying ? (
-              <div className="flex items-center gap-0.5">
-                <div className="w-1 bg-white rounded-full animate-eq-1" />
-                <div className="w-1 bg-white rounded-full animate-eq-2" />
-                <div className="w-1 bg-white rounded-full animate-eq-3" />
+        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-gray-950">
+          {!isRevealed ? (
+            /* Locked / Surprise Wrapped Gift Box Envelope */
+            <motion.div
+              initial={{ scale: 1 }}
+              whileHover={{ scale: 1.03 }}
+              className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-gradient-to-br from-[#12121e] via-[#1a0928] to-[#06060c] p-6 text-center text-white border border-white/10"
+            >
+              {/* Glowing ribbon / wax seal */}
+              <div className="relative mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-tr from-[#ff2e83] to-[#ffcf5c] p-1 shadow-[0_0_30px_rgba(255,46,131,0.5)]">
+                <div className="flex h-full w-full items-center justify-center rounded-full bg-black/80 text-3xl">
+                  🎁
+                </div>
               </div>
-            ) : (
-              <span>▶</span>
-            )}
-          </button>
 
-          {/* Caption Overlay */}
-          <div
-            className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/95 via-black/60 to-transparent p-4 text-left"
-            style={{ transform: "translateZ(40px)" }}
-          >
-            <p className="text-lg font-bold" style={{ color: c }}>{item.caption}</p>
-            <p className="mt-0.5 text-xs text-white/70">{item.sub}</p>
+              <span className="font-hand text-2xl text-[#2ee6d6] neon-cyan">
+                Memory #{String(item.id).padStart(2, "0")}
+              </span>
 
-            {/* Song title row */}
-            <div className="mt-2 flex items-center justify-between border-t border-white/10 pt-2 text-[11px] font-medium text-white/60">
-              <span className="truncate">▶ {item.songArtist}</span>
-              <span className="text-[#ffcf5c] font-hand text-sm">Click to expand</span>
-            </div>
-          </div>
+              <h4 className="mt-1 text-base font-extrabold text-white">
+                Secret Surprise Box
+              </h4>
 
-          {/* Card Number Badge */}
-          <span
-            className="absolute right-3 bottom-16 z-20 font-hand text-3xl font-extrabold text-white/80 drop-shadow-md"
-            style={{ transform: "translateZ(50px)" }}
-          >
-            #{String(item.id).padStart(2, "0")}
-          </span>
+              <p className="mt-2 text-xs text-white/60">
+                Tap to unwrap photo & play song! ✨
+              </p>
+
+              <div className="mt-5 rounded-full bg-[#ff2e83] px-4 py-2 text-xs font-bold text-white shadow-lg shadow-[#ff2e83]/40 transition group-hover:scale-105">
+                🎉 Open Surprise
+              </div>
+            </motion.div>
+          ) : (
+            /* Unwrapped Photo View */
+            <motion.div
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="relative h-full w-full"
+            >
+              <img
+                src={item.src}
+                alt={item.caption}
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy"
+              />
+
+              {/* Song Badge overlay */}
+              <div className="absolute left-3 top-3 z-30 flex items-center gap-2 rounded-full bg-black/80 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md border border-white/20">
+                <span className={isPlaying ? "animate-spin text-[#ff2e83]" : "text-[#2ee6d6]"}>🎵</span>
+                <span className="truncate max-w-[140px]">{item.songTitle}</span>
+              </div>
+
+              {/* Floating audio trigger button */}
+              <button
+                className="audio-btn absolute right-3 top-3 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-[#ff2e83] text-white shadow-lg transition hover:scale-110 active:scale-95"
+                title="Play/Pause Song"
+              >
+                {isPlaying ? (
+                  <div className="flex items-center gap-0.5">
+                    <div className="w-1 bg-white rounded-full animate-eq-1" />
+                    <div className="w-1 bg-white rounded-full animate-eq-2" />
+                    <div className="w-1 bg-white rounded-full animate-eq-3" />
+                  </div>
+                ) : (
+                  <span>▶</span>
+                )}
+              </button>
+
+              {/* Caption Overlay */}
+              <div
+                className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/95 via-black/60 to-transparent p-4 text-left"
+                style={{ transform: "translateZ(40px)" }}
+              >
+                <p className="text-lg font-bold" style={{ color: c }}>{item.caption}</p>
+                <p className="mt-0.5 text-xs text-white/70">{item.sub}</p>
+
+                {/* Song title row */}
+                <div className="mt-2 flex items-center justify-between border-t border-white/10 pt-2 text-[11px] font-medium text-white/60">
+                  <span className="truncate">▶ {item.songArtist}</span>
+                  <span className="text-[#ffcf5c] font-hand text-sm">Click to expand</span>
+                </div>
+              </div>
+
+              {/* Card Number Badge */}
+              <span
+                className="absolute right-3 bottom-16 z-20 font-hand text-3xl font-extrabold text-white/80 drop-shadow-md"
+                style={{ transform: "translateZ(50px)" }}
+              >
+                #{String(item.id).padStart(2, "0")}
+              </span>
+            </motion.div>
+          )}
         </div>
       </motion.div>
     </motion.div>
