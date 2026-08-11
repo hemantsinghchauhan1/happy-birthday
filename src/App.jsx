@@ -39,7 +39,7 @@ function App() {
         <AnimatePresence>{loading && <Preloader onDone={finish} />}</AnimatePresence>
 
         <main className="relative">
-          <Hero music={music} cardAudio={cardAudio} />
+          <Hero music={music} cardAudio={cardAudio} onOpenModal={(item) => setSelectedPhoto(item)} />
           <MemoryCarousel cardAudio={cardAudio} onOpenModal={(item) => setSelectedPhoto(item)} />
           <StorySection />
           <Gallery activeCardId={cardAudio.activeCardId} onToggleAudio={cardAudio.toggleCardAudio} onOpenModal={(item) => setSelectedPhoto(item)} />
