@@ -15,6 +15,8 @@ export default function TiltCard({ item, index, isPlaying, onToggleAudio, onOpen
   const c = glow[item.accent] || glow.magenta;
 
   const onMove = (e) => {
+    // Disable 3D tilt on touch screens / mobile viewports to prevent cards from dancing on scroll!
+    if (e.pointerType === "touch" || typeof window !== "undefined" && window.innerWidth < 640) return;
     const r = e.currentTarget.getBoundingClientRect();
     mx.set((e.clientX - r.left) / r.width - 0.5);
     my.set((e.clientY - r.top) / r.height - 0.5);
