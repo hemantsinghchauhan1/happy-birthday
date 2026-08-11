@@ -11,7 +11,7 @@ export default function PhotoModal({ item, onClose, isPlaying, onToggleAudio }) 
 
   if (!item) return null;
 
-  const handleZoomIn = () => setZoom((prev) => Math.min(prev + 0.5, 3.5));
+  const handleZoomIn = () => setZoom((prev) => Math.min(prev + 0.5, 3));
   const handleZoomOut = () => setZoom((prev) => Math.max(prev - 0.5, 1));
   const handleResetZoom = () => setZoom(1);
 
@@ -70,7 +70,7 @@ export default function PhotoModal({ item, onClose, isPlaying, onToggleAudio }) 
               {/* Zoom In Button */}
               <button
                 onClick={handleZoomIn}
-                disabled={zoom >= 3.5}
+                disabled={zoom >= 3}
                 className="flex h-7 w-7 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-white/10 text-sm sm:text-lg font-bold text-white transition hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed"
                 title="Zoom In (+)"
               >
@@ -89,17 +89,26 @@ export default function PhotoModal({ item, onClose, isPlaying, onToggleAudio }) 
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-12 items-center">
-            {/* Interactive Zoomable Image Area */}
+            {/* Stable Non-Dancing Zoomable Image Area */}
             <div className="md:col-span-7 relative h-52 sm:h-80 md:h-[440px] w-full overflow-hidden rounded-xl sm:rounded-2xl bg-black flex items-center justify-center border border-white/10">
               <motion.img
                 key={item.id}
                 src={item.src}
                 alt={item.caption}
                 animate={{ scale: zoom }}
-                transition={{ duration: 0.35, ease: "easeOut" }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
                 drag={zoom > 1}
-                dragConstraints={{ left: -150 * zoom, right: 150 * zoom, top: -150 * zoom, bottom: 150 * zoom }}
-                className={`max-h-full max-w-full object-contain ${zoom > 1 ? "cursor-grab active:cursor-grabbing" : ""}`}
+                dragElastic={0.05}
+                dragConstraints={{
+                  left: -80 * (zoom - 1),
+                  right: 80 * (zoom - 1),
+                  top: -80 * (zoom - 1),
+                  bottom: 80 * (zoom - 1),
+                }}
+                className={`max-h-full max-w-full object-contain rounded-lg select-none ${
+                  zoom > 1 ? "cursor-grab active:cursor-grabbing" : ""
+                }`}
+                style={{ touchAction: zoom > 1 ? "none" : "pan-y" }}
               />
 
               {/* Zoom instruction overlay */}
