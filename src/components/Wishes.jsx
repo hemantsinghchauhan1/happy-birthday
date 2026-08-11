@@ -34,15 +34,15 @@ export default function Wishes() {
           </div>
 
           <h3 className="font-serif-i text-3xl sm:text-5xl italic text-[#f4efe6] leading-tight mb-6">
-            "Mithlesh, jab mere paas koi nahi tha... tab tu tha."
+            "Mithlesh, Sir Ross Masood Hall ke gate ka wo pehla din main kabhi nahi bhool sakta."
           </h3>
 
           <div className="space-y-4 text-base sm:text-lg text-white/85 leading-relaxed font-sans">
             <p>
-              College ke pehle din jab main AMU mein kadam rakha, mere paas na koi dost tha, na rukne ke liye chhat. Main poori tarah akela tha. Par tune bina kisi sawaal ke mujhe apna kamra diya, apna khana bataya, aur mujhe kabhi mehsus nahi hone diya ki main alag hoon.
+              College ke pehle din jab main poori AMU University mein bilkul akela tha, na kisi se pehchan thi na aage ka pata... tab Sir Ross Masood Hall ke gate par tu mera intezaar kar raha tha. Us anjaan sheher mein tune pehla haath milaaya aur dosti ki aisi misaal kayam ki jo aaj tak kayam hai.
             </p>
             <p>
-              AMU ke un hostel rooms se lekar aaj IIT ke is safar tak, tune har kadam par mera saath diya hai. Tu sirf ek accha dost nahi hai — tu mera wo bhai hai jis par main aankhein band karke bharosa kar sakta hoon.
+              Sir Ross Masood Hall ke un dino se lekar aaj IIT ke is safar tak, tune har kadam par ek sachhe bhai ki tarah mera saath diya hai. Tu sirf ek accha dost nahi hai — tu mera wo sachha yaar hai jis par main hamesha garv karta hoon.
             </p>
             <p className="font-bold text-[#2ee6d6]">
               Aaj tere janamdin par main upar wale se bas yahi maangta hoon ki teri har khwahish poori ho. Mujhe zindagi ki har race jeetni hai, par sirf tere saath.
