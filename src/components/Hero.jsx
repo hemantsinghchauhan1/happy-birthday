@@ -65,11 +65,11 @@ function Animated3DText({ text, className, text3dStyle, delayOffset = 0 }) {
   );
 }
 
-// 4 Corner Pad Positions Optimized for Mobile & Desktop
+// 4 Corner Pad Positions Optimized for Mobile & Desktop (60% right bound prevents 100vw overflow!)
 const padCoordinates = [
   { id: 0, pos: { left: "2%", top: "4%" }, rot: -12, glow: "#ff2e83" },   // Top-Left
-  { id: 1, pos: { left: "68%", top: "4%" }, rot: 10, glow: "#2ee6d6" },   // Top-Right
-  { id: 2, pos: { left: "68%", top: "82%" }, rot: -8, glow: "#ffcf5c" },  // Bottom-Right
+  { id: 1, pos: { left: "60%", top: "4%" }, rot: 10, glow: "#2ee6d6" },   // Top-Right
+  { id: 2, pos: { left: "60%", top: "82%" }, rot: -8, glow: "#ffcf5c" },  // Bottom-Right
   { id: 3, pos: { left: "2%", top: "82%" }, rot: 9, glow: "#8b5cff" },   // Bottom-Left
 ];
 
@@ -131,6 +131,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
   const rotY = useTransform(sx, [-0.5, 0.5], [-12, 12]);
 
   const onMove = (e) => {
+    if (e.pointerType === "touch" || typeof window !== "undefined" && window.innerWidth < 640) return;
     const r = e.currentTarget.getBoundingClientRect();
     mx.set((e.clientX - r.left) / r.width - 0.5);
     my.set((e.clientY - r.top) / r.height - 0.5);
@@ -165,12 +166,12 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
   return (
     <section
       onMouseMove={onMove}
-      className="relative z-10 min-h-screen w-full overflow-hidden"
+      className="relative z-10 min-h-screen w-full overflow-hidden max-w-[100vw]"
       style={{ perspective: 1200 }}
       data-testid="hero"
     >
       {/* 3D Radial Glow Backdrops */}
-      <div className="pointer-events-none absolute inset-0 z-0">
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
         <div className="absolute left-1/2 top-1/3 h-[80vh] w-[80vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#ff2e83]/25 blur-[140px]" />
         <div className="absolute left-1/5 bottom-0 h-[50vh] w-[50vh] rounded-full bg-[#2ee6d6]/20 blur-[130px]" />
         <div className="absolute right-1/5 top-1/4 h-[45vh] w-[45vh] rounded-full bg-[#8b5cff]/25 blur-[130px]" />
@@ -195,7 +196,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
               onClick={() => onOpenModal && onOpenModal(padMemory)}
             >
               <div
-                className="relative w-[68px] sm:w-36 md:w-40 rounded-xl sm:rounded-2xl bg-white p-1 sm:p-2 shadow-[0_15px_40px_rgba(0,0,0,0.6)] border border-white/50"
+                className="relative w-[64px] sm:w-36 md:w-40 rounded-xl sm:rounded-2xl bg-white p-1 sm:p-2 shadow-[0_15px_40px_rgba(0,0,0,0.6)] border border-white/50"
                 style={{ transform: `rotate(${pad.rot}deg)` }}
               >
                 {/* Washi tape clip */}
@@ -235,7 +236,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
             ease: "easeInOut",
             times: [0, 0.3, 0.7, 1],
           }}
-          className="relative w-[68px] sm:w-36 md:w-40 rounded-xl sm:rounded-2xl bg-white p-1 sm:p-2 shadow-[0_25px_70px_rgba(255,46,131,0.8)] border-2 border-[#ff2e83] overflow-hidden"
+          className="relative w-[64px] sm:w-36 md:w-40 rounded-xl sm:rounded-2xl bg-white p-1 sm:p-2 shadow-[0_25px_70px_rgba(255,46,131,0.8)] border-2 border-[#ff2e83] overflow-hidden"
         >
           {/* Dynamic Flight Style Badge */}
           <div className="absolute -top-1.5 -right-1.5 sm:-top-3 sm:-right-3 z-40 flex h-5 w-5 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-gradient-to-r from-[#ff2e83] to-[#2ee6d6] text-white text-[9px] sm:text-sm font-bold shadow-xl animate-pulse">
