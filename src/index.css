@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .font-serif-i {
+    font-family: 'Instrument Serif', serif;
+  }
+  .font-hand {
+    font-family: 'Caveat', cursive;
+  }
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.neon-magenta {
+  text-shadow: 0 0 8px rgba(255, 46, 131, 0.7), 0 0 30px rgba(255, 46, 131, 0.45), 0 0 70px rgba(255, 46, 131, 0.3);
+}
+.neon-cyan {
+  text-shadow: 0 0 8px rgba(46, 230, 214, 0.7), 0 0 30px rgba(46, 230, 214, 0.4);
+}
+.neon-gold {
+  text-shadow: 0 0 8px rgba(255, 207, 92, 0.7), 0 0 26px rgba(255, 207, 92, 0.4);
+}
+
+.grain::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.tilt-3d {
+  transform-style: preserve-3d;
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-24px);
+  }
+}
+.float-slow {
+  animation: float-slow 7s ease-in-out infinite;
+}
+
+@keyframes spin-vinyl {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spin-vinyl {
+  animation: spin-vinyl 3.5s linear infinite;
+}
+
+@keyframes eq-bar {
+  0%, 100% {
+    height: 4px;
+  }
+  50% {
+    height: 18px;
+  }
+}
+.animate-eq-1 {
+  animation: eq-bar 0.6s ease-in-out infinite;
+}
+.animate-eq-2 {
+  animation: eq-bar 0.8s ease-in-out infinite 0.2s;
+}
+.animate-eq-3 {
+  animation: eq-bar 0.5s ease-in-out infinite 0.4s;
+}
+.animate-eq-4 {
+  animation: eq-bar 0.7s ease-in-out infinite 0.1s;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  display: inline-flex;
+  animation: marquee 28s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+/* Polaroid Paper Aesthetic */
+.polaroid-frame {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.2);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+
+.washi-tape {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 70px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(4px);
+  border: 1px dashed rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  z-index: 30;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #06060c;
+}
+::-webkit-scrollbar-thumb {
+  background: #ff2e83;
+  border-radius: 99px;
+}
