@@ -1,4 +1,5 @@
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { memories } from "../data";
 
 const reveal = {
@@ -16,22 +17,17 @@ function Line({ children, i, className }) {
   );
 }
 
-// 4 Corner Flight Waypoints (Clockwise Path)
-const flightWaypoints = [
-  { x: "5vw", y: "10vh", rotate: -12, scale: 1 },    // Pos 0: Top-Left
-  { x: "72vw", y: "12vh", rotate: 10, scale: 1.05 },  // Pos 1: Top-Right
-  { x: "70vw", y: "62vh", rotate: -8, scale: 0.95 },  // Pos 2: Bottom-Right
-  { x: "6vw", y: "60vh", rotate: 9, scale: 1 },      // Pos 3: Bottom-Left
-];
-
-const cardsToFly = [
-  { memory: memories[10], startIdx: 0 },
-  { memory: memories[11], startIdx: 1 },
-  { memory: memories[9], startIdx: 2 },
-  { memory: memories[6], startIdx: 3 },
+// Fixed Corner Frame Configurations
+const cornerFrames = [
+  { id: 0, pos: "top-[12%] left-[3%] sm:left-[5%]", rot: -12, size: "w-28 sm:w-36 md:w-44", label: "Top Left" },
+  { id: 1, pos: "top-[14%] right-[3%] sm:right-[5%]", rot: 10, size: "w-28 sm:w-36 md:w-40", label: "Top Right" },
+  { id: 2, pos: "bottom-[12%] right-[3%] sm:right-[5%]", rot: -8, size: "w-28 sm:w-36 md:w-40", label: "Bottom Right" },
+  { id: 3, pos: "bottom-[14%] left-[3%] sm:left-[5%]", rot: 9, size: "w-28 sm:w-36 md:w-36", label: "Bottom Left" },
 ];
 
 export default function Hero({ music, cardAudio, onOpenModal }) {
+  const [photoStartIndex, setPhotoStartIndex] = useState(0);
+
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const sx = useSpring(mx, { stiffness: 60, damping: 20 });
@@ -44,6 +40,14 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
     mx.set((e.clientX - r.left) / r.width - 0.5);
     my.set((e.clientY - r.top) / r.height - 0.5);
   };
+
+  // Clockwise Photo Jump Cycle: Images jump from Frame 0 -> 1 -> 2 -> 3 -> New Image!
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setPhotoStartIndex((prev) => (prev + 1) % memories.length);
+    }, 3800);
+    return () => clearInterval(timer);
+  }, []);
 
   const scrollToCarousel = () => {
     const carouselEl = document.querySelector('[data-testid="memory-carousel"]');
@@ -66,61 +70,51 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         <div className="absolute right-1/5 top-1/4 h-[45vh] w-[45vh] rounded-full bg-[#8b5cff]/25 blur-[130px]" />
       </div>
 
-      {/* Clockwise Paper Airplane Flight Arc Animation of 4 Photos */}
+      {/* 4 Fixed Corner Frames with Clockwise Jumping Images */}
       <motion.div
-        className="absolute inset-0 z-10 block pointer-events-none"
+        className="absolute inset-0 z-10 block"
         style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}
       >
-        {cardsToFly.map((c, i) => {
-          // Generate 4 keyframes starting from card's startIdx in Clockwise order
-          const pathX = [];
-          const pathY = [];
-          const pathRotate = [];
-          const pathScale = [];
-
-          for (let step = 0; step <= 4; step++) {
-            const waypoint = flightWaypoints[(c.startIdx + step) % 4];
-            pathX.push(waypoint.x);
-            pathY.push(waypoint.y);
-            pathRotate.push(waypoint.rotate);
-            pathScale.push(waypoint.scale);
-          }
+        {cornerFrames.map((frame, i) => {
+          const currentMemory = memories[(photoStartIndex + i) % memories.length];
 
           return (
-            <motion.div
-              key={i}
-              className="absolute cursor-pointer group pointer-events-auto"
-              animate={{
-                left: pathX,
-                top: pathY,
-                rotate: pathRotate,
-                scale: pathScale,
-              }}
-              transition={{
-                repeat: Infinity,
-                duration: 20,
-                ease: "easeInOut",
-              }}
-              whileHover={{ scale: 1.15, zIndex: 50 }}
-              onClick={() => onOpenModal && onOpenModal(c.memory)}
+            <div
+              key={frame.id}
+              className={`absolute ${frame.pos} cursor-pointer group`}
+              onClick={() => onOpenModal && onOpenModal(currentMemory)}
             >
-              {/* Paper Plane Flight Swoosh Trail Badge */}
-              <div className="absolute -top-3 -right-3 z-30 flex h-7 w-7 items-center justify-center rounded-full bg-[#2ee6d6] text-black text-xs font-bold shadow-lg animate-bounce">
-                ✈️
-              </div>
-
-              <div className="w-28 sm:w-36 md:w-44 rounded-2xl bg-white p-2 shadow-[0_25px_60px_rgba(0,0,0,0.7)] transition-all duration-300 group-hover:shadow-[0_30px_70px_rgba(255,46,131,0.5)] border border-white/50">
+              <motion.div
+                whileHover={{ scale: 1.12, zIndex: 40 }}
+                className={`${frame.size} rounded-2xl bg-white p-1.5 sm:p-2 shadow-[0_25px_60px_rgba(0,0,0,0.7)] transition-all duration-300 group-hover:shadow-[0_30px_70px_rgba(255,46,131,0.4)] border border-white/50`}
+                style={{ transform: `rotate(${frame.rot}deg)` }}
+              >
                 {/* Washi tape clip */}
                 <div className="washi-tape" />
 
-                <div className="relative h-36 sm:h-48 md:h-56 w-full overflow-hidden rounded-xl bg-black">
-                  <img src={c.memory.src} alt="" className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                  <div className="absolute bottom-1.5 left-1.5 right-1.5 rounded-lg bg-black/70 px-2 py-1 text-[9px] sm:text-[11px] font-bold text-white backdrop-blur-md truncate text-left">
-                    #{String(c.memory.id).padStart(2, "0")} {c.memory.caption}
+                {/* Jumping Image Container */}
+                <div className="relative h-32 sm:h-44 md:h-56 w-full overflow-hidden rounded-xl bg-black">
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={currentMemory.id}
+                      src={currentMemory.src}
+                      alt={currentMemory.caption}
+                      initial={{ opacity: 0, scale: 1.2, x: -30, rotate: -5 }}
+                      animate={{ opacity: 1, scale: 1, x: 0, rotate: 0 }}
+                      exit={{ opacity: 0, scale: 0.8, x: 30, rotate: 5 }}
+                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                      className="h-full w-full object-cover"
+                    />
+                  </AnimatePresence>
+
+                  {/* Photo Title Overlay */}
+                  <div className="absolute bottom-1.5 left-1.5 right-1.5 rounded-lg bg-black/75 px-2 py-1 text-[9px] sm:text-[11px] font-bold text-white backdrop-blur-md truncate text-left border border-white/10">
+                    <span className="text-[#2ee6d6] mr-1">#{String(currentMemory.id).padStart(2, "0")}</span>
+                    {currentMemory.caption}
                   </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           );
         })}
       </motion.div>
@@ -131,7 +125,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
           <motion.div
             key={i}
             className="absolute text-xl sm:text-3xl"
-            style={{ left: `${20 + i * 12}%`, top: `${15 + (i % 3) * 26}%` }}
+            style={{ left: `${15 + i * 14}%`, top: `${18 + (i % 3) * 26}%` }}
             animate={{
               y: [-12, 12, -12],
               rotate: [-12, 12, -12],
@@ -178,7 +172,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1, duration: 0.6 }}
-          className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-5 py-2 text-xs sm:text-sm font-extrabold text-[#2ee6d6] backdrop-blur-md border border-[#2ee6d6]/30 shadow-[0_0_25px_rgba(46,230,214,0.35)]"
+          className="mb-3 sm:mb-5 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 sm:px-6 py-2 text-xs sm:text-sm font-extrabold text-[#2ee6d6] backdrop-blur-md border border-[#2ee6d6]/30 shadow-[0_0_20px_rgba(46,230,214,0.3)]"
         >
           <span className="text-sm sm:text-base">👑</span> 12 AUGUST · HAPPIEST BIRTHDAY <span className="text-sm sm:text-base">✨</span>
         </motion.div>
