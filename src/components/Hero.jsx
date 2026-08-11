@@ -2,9 +2,12 @@ import { useState, useEffect } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { memories } from "../data";
 
-// Letter-by-Letter 3D Animated Text Component
+const letterSurprises = ["💖", "🎉", "👑", "🎂", "✨", "⭐", "🎶", "🥳", "💫", "🔥", "🎈", "🎁"];
+
+// Letter-by-Letter 3D Animated Text Component with Interactive Touch & Hover Emoji Popups
 function Animated3DText({ text, className, text3dStyle, delayOffset = 0 }) {
   const letters = Array.from(text);
+  const [hoveredIdx, setHoveredIdx] = useState(null);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -38,22 +41,46 @@ function Animated3DText({ text, className, text3dStyle, delayOffset = 0 }) {
       animate="show"
       className="inline-flex flex-wrap justify-center overflow-visible"
     >
-      {letters.map((char, index) => (
-        <motion.span
-          key={index}
-          variants={letterVariants}
-          whileHover={{
-            y: -14,
-            scale: 1.22,
-            rotateZ: index % 2 === 0 ? 8 : -8,
-            transition: { duration: 0.2 },
-          }}
-          className={`inline-block cursor-pointer transition-colors duration-200 ${className} ${text3dStyle}`}
-          style={{ transformStyle: "preserve-3d" }}
-        >
-          {char === " " ? "\u00A0" : char}
-        </motion.span>
-      ))}
+      {letters.map((char, index) => {
+        const surpriseEmoji = letterSurprises[index % letterSurprises.length];
+        const isHovered = hoveredIdx === index;
+
+        return (
+          <motion.span
+            key={index}
+            variants={letterVariants}
+            onMouseEnter={() => setHoveredIdx(index)}
+            onMouseLeave={() => setHoveredIdx(null)}
+            onTouchStart={() => setHoveredIdx(index)}
+            onTouchEnd={() => setTimeout(() => setHoveredIdx(null), 1000)}
+            whileHover={{
+              y: -16,
+              scale: 1.25,
+              rotateZ: index % 2 === 0 ? 10 : -10,
+              transition: { duration: 0.2 },
+            }}
+            whileTap={{ scale: 1.3, y: -20 }}
+            className={`relative inline-block cursor-pointer transition-colors duration-200 ${className} ${text3dStyle} ${
+              isHovered ? "text-[#2ee6d6] drop-shadow-[0_0_20px_#2ee6d6]" : ""
+            }`}
+            style={{ transformStyle: "preserve-3d" }}
+          >
+            {/* Surprise Emoji Badge Floating Above Letter on Hover/Tap */}
+            {isHovered && (
+              <motion.span
+                initial={{ opacity: 0, y: 10, scale: 0.5 }}
+                animate={{ opacity: 1, y: -32, scale: 1.3 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                className="absolute left-1/2 -translate-x-1/2 pointer-events-none text-base sm:text-xl drop-shadow-lg z-50"
+              >
+                {surpriseEmoji}
+              </motion.span>
+            )}
+
+            {char === " " ? "\u00A0" : char}
+          </motion.span>
+        );
+      })}
     </motion.span>
   );
 }
@@ -312,7 +339,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
           <span className="text-xs sm:text-base">👑</span> 12 AUGUST · HAPPIEST BIRTHDAY <span className="text-xs sm:text-base">✨</span>
         </motion.div>
 
-        {/* Letter-by-Letter 3D Extruded Animated Title */}
+        {/* Letter-by-Letter 3D Extruded Animated Title with Hover Surprise Emojis */}
         <motion.div style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}>
           <h1 className="font-extrabold uppercase leading-[0.86] tracking-tight">
             <span className="block">
