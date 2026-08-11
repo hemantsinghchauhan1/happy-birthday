@@ -45,13 +45,13 @@ export default function PhotoModal({ item, onClose, isPlaying, onToggleAudio }) 
           className="absolute inset-0 bg-black/90 backdrop-blur-xl"
         />
 
-        {/* Modal Window — Scrollable max-h-[88vh] with Frozen Background Page! */}
+        {/* Modal Window — Scrollable with ZERO Right-Side Scrollbar Stick! */}
         <motion.div
           initial={{ opacity: 0, scale: 0.85, y: 30 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.85, y: 30 }}
           transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 max-h-[88vh] w-full max-w-4xl overflow-y-auto rounded-2xl sm:rounded-3xl bg-[#0b0b14] p-3.5 sm:p-6 border border-white/20 shadow-[0_30px_80px_rgba(0,0,0,0.9)]"
+          className="relative z-10 max-h-[88vh] w-full max-w-4xl overflow-y-auto rounded-2xl sm:rounded-3xl bg-[#0b0b14] p-3.5 sm:p-6 border border-white/20 shadow-[0_30px_80px_rgba(0,0,0,0.9)] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         >
           {/* Top Bar Controls — Fully Responsive for Mobile & Desktop */}
           <div className="mb-3 sm:mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2.5 sm:pb-3">

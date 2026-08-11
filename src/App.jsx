@@ -17,6 +17,7 @@ import CakeWish from "@/components/CakeWish";
 import Countdown from "@/components/Countdown";
 import Footer from "@/components/Footer";
 import PhotoModal from "@/components/PhotoModal";
+import BottomAudioDock from "@/components/BottomAudioDock";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -47,6 +48,14 @@ function App() {
           <Countdown />
           <Footer />
         </main>
+
+        <BottomAudioDock
+          activeCardId={cardAudio.activeCardId}
+          isModalOpen={Boolean(selectedPhoto)}
+          onToggleAudio={cardAudio.toggleCardAudio}
+          onStopAudio={cardAudio.stopAudio}
+          onOpenModal={(item) => setSelectedPhoto(item)}
+        />
 
         <PhotoModal
           item={selectedPhoto}
