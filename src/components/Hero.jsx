@@ -17,12 +17,12 @@ function Line({ children, i, className }) {
   );
 }
 
-// 4 Corner Pad Positions
+// 4 Corner Pad Positions with Mobile-First Precision Coordinates (0 overlap on mobile & desktop!)
 const padCoordinates = [
-  { id: 0, pos: { left: "3%", top: "12%" }, rot: -12, glow: "#ff2e83" },   // Top-Left
-  { id: 1, pos: { left: "76%", top: "12%" }, rot: 10, glow: "#2ee6d6" },   // Top-Right
-  { id: 2, pos: { left: "76%", top: "68%" }, rot: -8, glow: "#ffcf5c" },  // Bottom-Right
-  { id: 3, pos: { left: "3%", top: "66%" }, rot: 9, glow: "#8b5cff" },    // Bottom-Left
+  { id: 0, pos: { left: "1.5%", top: "4%" }, rot: -12, glow: "#ff2e83" },   // Far Top-Left
+  { id: 1, pos: { left: "74%", top: "4%" }, rot: 10, glow: "#2ee6d6" },    // Far Top-Right
+  { id: 2, pos: { left: "74%", top: "82%" }, rot: -8, glow: "#ffcf5c" },   // Far Bottom-Right (Below CTAs)
+  { id: 3, pos: { left: "1.5%", top: "82%" }, rot: 9, glow: "#8b5cff" },    // Far Bottom-Left (Below CTAs)
 ];
 
 // 4 Dynamic Flight Jump Styles
@@ -148,15 +148,15 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
               whileHover={{ scale: 1.12, zIndex: 40 }}
             >
               <div
-                className="relative w-24 sm:w-36 md:w-40 rounded-2xl bg-white p-1.5 sm:p-2 shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-white/50"
+                className="relative w-[76px] sm:w-36 md:w-40 rounded-xl sm:rounded-2xl bg-white p-1 sm:p-2 shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-white/50"
                 style={{ transform: `rotate(${pad.rot}deg)` }}
               >
                 {/* Washi tape clip */}
                 <div className="washi-tape" />
 
-                <div className="relative h-32 sm:h-44 md:h-52 w-full overflow-hidden rounded-xl bg-black">
+                <div className="relative h-24 sm:h-44 md:h-52 w-full overflow-hidden rounded-lg sm:rounded-xl bg-black">
                   <img src={padMemory.src} alt="" className="h-full w-full object-cover group-hover:scale-108 transition-transform duration-500" />
-                  <div className="absolute bottom-1 left-1 right-1 sm:bottom-1.5 sm:left-1.5 sm:right-1.5 rounded-lg bg-black/75 px-1.5 py-0.5 sm:px-2 sm:py-1 text-[8px] sm:text-[10px] font-bold text-white backdrop-blur-md truncate text-left border border-white/10">
+                  <div className="absolute bottom-0.5 left-0.5 right-0.5 sm:bottom-1.5 sm:left-1.5 sm:right-1.5 rounded bg-black/75 px-1 py-0.5 sm:px-2 sm:py-1 text-[7px] sm:text-[10px] font-bold text-white backdrop-blur-md truncate text-left border border-white/10">
                     <span className="text-[#2ee6d6] mr-0.5 sm:mr-1">#{String(padMemory.id).padStart(2, "0")}</span>
                     {padMemory.caption}
                   </div>
@@ -167,7 +167,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         })}
       </motion.div>
 
-      {/* Single Dynamic 3D Flying Card (Sole active card at activePad location - 0 double ghosting!) */}
+      {/* Single Dynamic 3D Flying Card (Responsive & 0 Overlap!) */}
       <motion.div
         className="absolute z-30 block pointer-events-auto cursor-pointer"
         animate={{
@@ -188,25 +188,25 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
             ease: "easeInOut",
             times: [0, 0.3, 0.7, 1],
           }}
-          className="relative w-24 sm:w-36 md:w-40 rounded-2xl bg-white p-1.5 sm:p-2 shadow-[0_30px_90px_rgba(255,46,131,0.8)] border-2 border-[#ff2e83] overflow-hidden"
+          className="relative w-[76px] sm:w-36 md:w-40 rounded-xl sm:rounded-2xl bg-white p-1 sm:p-2 shadow-[0_30px_90px_rgba(255,46,131,0.8)] border-2 border-[#ff2e83] overflow-hidden"
         >
           {/* Dynamic Flight Style Badge */}
-          <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 z-40 flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-gradient-to-r from-[#ff2e83] to-[#2ee6d6] text-white text-xs sm:text-sm font-bold shadow-xl animate-pulse">
+          <div className="absolute -top-1.5 -right-1.5 sm:-top-3 sm:-right-3 z-40 flex h-5 w-5 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-gradient-to-r from-[#ff2e83] to-[#2ee6d6] text-white text-[9px] sm:text-sm font-bold shadow-xl animate-pulse">
             {currentJumpStyle.badge}
           </div>
 
           {/* Washi tape clip */}
           <div className="washi-tape" />
 
-          <div className="relative h-32 sm:h-44 md:h-52 w-full overflow-hidden rounded-xl bg-black">
+          <div className="relative h-24 sm:h-44 md:h-52 w-full overflow-hidden rounded-lg sm:rounded-xl bg-black">
             <img
               src={activeMemory.src}
               alt={activeMemory.caption}
               className="h-full w-full object-cover"
             />
 
-            <div className="absolute bottom-1 left-1 right-1 sm:bottom-1.5 sm:left-1.5 sm:right-1.5 rounded-lg bg-black/85 px-1.5 py-0.5 sm:px-2 sm:py-1 text-[8px] sm:text-[10px] font-extrabold text-white backdrop-blur-md truncate text-left border border-white/20">
-              <span className="text-[#2ee6d6] mr-1">#{String(activeMemory.id).padStart(2, "0")}</span>
+            <div className="absolute bottom-0.5 left-0.5 right-0.5 sm:bottom-1.5 sm:left-1.5 sm:right-1.5 rounded bg-black/85 px-1 py-0.5 sm:px-2 sm:py-1 text-[7px] sm:text-[10px] font-extrabold text-white backdrop-blur-md truncate text-left border border-white/20">
+              <span className="text-[#2ee6d6] mr-0.5 sm:mr-1">#{String(activeMemory.id).padStart(2, "0")}</span>
               {activeMemory.caption}
             </div>
           </div>
@@ -218,7 +218,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         {["🎵", "✨", "💿", "💖", "🎂", "🎉"].map((icon, i) => (
           <motion.div
             key={i}
-            className="absolute text-xl sm:text-3xl"
+            className="absolute text-lg sm:text-3xl"
             style={{ left: `${15 + i * 14}%`, top: `${18 + (i % 3) * 26}%` }}
             animate={{
               y: [-12, 12, -12],
@@ -237,7 +237,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         {/* Play All Songs Button */}
         <button
           onClick={cardAudio?.startPlayAllSongs}
-          className={`flex items-center gap-1.5 sm:gap-2 rounded-full px-3.5 sm:px-5 py-2 text-xs sm:text-sm font-extrabold transition shadow-lg backdrop-blur-md border ${
+          className={`flex items-center gap-1.5 sm:gap-2 rounded-full px-3 sm:px-5 py-1.5 sm:py-2 text-[11px] sm:text-sm font-extrabold transition shadow-lg backdrop-blur-md border ${
             cardAudio?.isPlayAllMode
               ? "bg-[#2ee6d6] text-black border-[#2ee6d6] shadow-[#2ee6d6]/50 scale-105"
               : "bg-white/10 text-white border-white/20 hover:bg-white/20 hover:scale-105"
@@ -245,13 +245,13 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
           data-testid="play-all-toggle"
         >
           <span className={cardAudio?.isPlayAllMode ? "animate-spin" : ""}>🔁</span>
-          {cardAudio?.isPlayAllMode ? "Playlist Playing..." : "Play All Songs"}
+          {cardAudio?.isPlayAllMode ? "Playing..." : "Play All Songs"}
         </button>
 
         {/* Background Theme Button */}
         <button
           onClick={music.toggle}
-          className="glass flex items-center gap-1.5 sm:gap-2 rounded-full px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold transition hover:scale-105 text-white/90"
+          className="glass flex items-center gap-1.5 sm:gap-2 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-sm font-semibold transition hover:scale-105 text-white/90"
           data-testid="music-toggle"
         >
           <span className={`inline-flex h-2 w-2 rounded-full ${music.playing ? "bg-[#ff2e83] animate-pulse" : "bg-white/40"}`} />
@@ -260,15 +260,15 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
       </div>
 
       {/* Main Hero Title Area */}
-      <div className="relative z-20 flex min-h-screen flex-col items-center justify-center px-4 sm:px-6 text-center">
+      <div className="relative z-20 flex min-h-screen flex-col items-center justify-center px-4 sm:px-6 text-center py-16 sm:py-0">
         {/* Crown Badge */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1, duration: 0.6 }}
-          className="mb-3 sm:mb-5 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 sm:px-6 py-2 text-xs sm:text-sm font-extrabold text-[#2ee6d6] backdrop-blur-md border border-[#2ee6d6]/30 shadow-[0_0_20px_rgba(46,230,214,0.3)]"
+          className="mb-3 sm:mb-5 inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-white/10 px-3.5 sm:px-6 py-1.5 sm:py-2 text-[11px] sm:text-sm font-extrabold text-[#2ee6d6] backdrop-blur-md border border-[#2ee6d6]/30 shadow-[0_0_20px_rgba(46,230,214,0.3)] max-w-[90vw]"
         >
-          <span className="text-sm sm:text-base">👑</span> 12 AUGUST · HAPPIEST BIRTHDAY <span className="text-sm sm:text-base">✨</span>
+          <span className="text-xs sm:text-base">👑</span> 12 AUGUST · HAPPIEST BIRTHDAY <span className="text-xs sm:text-base">✨</span>
         </motion.div>
 
         {/* 3D Extruded Title */}
@@ -284,7 +284,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.1, duration: 0.8 }}
-          className="mt-6 sm:mt-8 max-w-xs sm:max-w-md text-xs sm:text-base text-white/80 leading-relaxed"
+          className="mt-6 sm:mt-8 max-w-[260px] sm:max-w-md text-xs sm:text-base text-white/80 leading-relaxed"
         >
           Mere pehle dost ke liye ek chhoti si duniya — banayi gayi yaadon, hansi aur dosti se. 💖
         </motion.p>
@@ -298,14 +298,14 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         >
           <button
             onClick={cardAudio?.startPlayAllSongs}
-            className="flex items-center gap-2 rounded-full bg-[#ff2e83] px-7 py-3.5 text-xs sm:text-sm font-bold text-white shadow-[0_10px_30px_rgba(255,46,131,0.5)] transition hover:scale-105 active:scale-95 border border-white/20"
+            className="flex items-center gap-2 rounded-full bg-[#ff2e83] px-6 sm:px-7 py-3 sm:py-3.5 text-xs sm:text-sm font-bold text-white shadow-[0_10px_30px_rgba(255,46,131,0.5)] transition hover:scale-105 active:scale-95 border border-white/20"
           >
             <span>Play All Memory Songs</span> 🎧
           </button>
 
           <button
             onClick={scrollToCarousel}
-            className="flex items-center gap-2 rounded-full bg-white/10 px-7 py-3.5 text-xs sm:text-sm font-bold text-white backdrop-blur-md transition hover:bg-white/20 hover:scale-105 active:scale-95 border border-white/20"
+            className="flex items-center gap-2 rounded-full bg-white/10 px-6 sm:px-7 py-3 sm:py-3.5 text-xs sm:text-sm font-bold text-white backdrop-blur-md transition hover:bg-white/20 hover:scale-105 active:scale-95 border border-white/20"
           >
             <span>Explore 3D Showcase</span> 📸
           </button>
@@ -316,7 +316,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.7 }}
-          className="mt-10 sm:mt-14 flex flex-col items-center gap-1 text-white/50"
+          className="mt-8 sm:mt-14 flex flex-col items-center gap-1 text-white/50"
         >
           <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em]">scroll down for memories & songs</span>
           <motion.span animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.6 }}>↓</motion.span>
