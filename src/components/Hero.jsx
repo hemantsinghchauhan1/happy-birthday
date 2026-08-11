@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { memories } from "../data";
 
 const reveal = {
@@ -17,33 +16,34 @@ function Line({ children, i, className }) {
   );
 }
 
-const heroSpotlightPhotos = memories;
+// 4 Corner Flight Waypoints (Clockwise Path)
+const flightWaypoints = [
+  { x: "5vw", y: "10vh", rotate: -12, scale: 1 },    // Pos 0: Top-Left
+  { x: "72vw", y: "12vh", rotate: 10, scale: 1.05 },  // Pos 1: Top-Right
+  { x: "70vw", y: "62vh", rotate: -8, scale: 0.95 },  // Pos 2: Bottom-Right
+  { x: "6vw", y: "60vh", rotate: 9, scale: 1 },      // Pos 3: Bottom-Left
+];
+
+const cardsToFly = [
+  { memory: memories[10], startIdx: 0 },
+  { memory: memories[11], startIdx: 1 },
+  { memory: memories[9], startIdx: 2 },
+  { memory: memories[6], startIdx: 3 },
+];
 
 export default function Hero({ music, cardAudio, onOpenModal }) {
-  const [photoIndex, setPhotoIndex] = useState(0);
-
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const sx = useSpring(mx, { stiffness: 60, damping: 20 });
   const sy = useSpring(my, { stiffness: 60, damping: 20 });
-  const rotX = useTransform(sy, [-0.5, 0.5], [12, -12]);
-  const rotY = useTransform(sx, [-0.5, 0.5], [-14, 14]);
+  const rotX = useTransform(sy, [-0.5, 0.5], [10, -10]);
+  const rotY = useTransform(sx, [-0.5, 0.5], [-12, 12]);
 
   const onMove = (e) => {
     const r = e.currentTarget.getBoundingClientRect();
     mx.set((e.clientX - r.left) / r.width - 0.5);
     my.set((e.clientY - r.top) / r.height - 0.5);
   };
-
-  // Continuous auto-changing photo cycle with Zoom-In / Zoom-Out Ken Burns animation!
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setPhotoIndex((prev) => (prev + 1) % heroSpotlightPhotos.length);
-    }, 4500);
-    return () => clearInterval(timer);
-  }, []);
-
-  const currentPhoto = heroSpotlightPhotos[photoIndex];
 
   const scrollToCarousel = () => {
     const carouselEl = document.querySelector('[data-testid="memory-carousel"]');
@@ -64,6 +64,84 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         <div className="absolute left-1/2 top-1/3 h-[80vh] w-[80vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#ff2e83]/25 blur-[140px]" />
         <div className="absolute left-1/5 bottom-0 h-[50vh] w-[50vh] rounded-full bg-[#2ee6d6]/20 blur-[130px]" />
         <div className="absolute right-1/5 top-1/4 h-[45vh] w-[45vh] rounded-full bg-[#8b5cff]/25 blur-[130px]" />
+      </div>
+
+      {/* Clockwise Paper Airplane Flight Arc Animation of 4 Photos */}
+      <motion.div
+        className="absolute inset-0 z-10 block pointer-events-none"
+        style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}
+      >
+        {cardsToFly.map((c, i) => {
+          // Generate 4 keyframes starting from card's startIdx in Clockwise order
+          const pathX = [];
+          const pathY = [];
+          const pathRotate = [];
+          const pathScale = [];
+
+          for (let step = 0; step <= 4; step++) {
+            const waypoint = flightWaypoints[(c.startIdx + step) % 4];
+            pathX.push(waypoint.x);
+            pathY.push(waypoint.y);
+            pathRotate.push(waypoint.rotate);
+            pathScale.push(waypoint.scale);
+          }
+
+          return (
+            <motion.div
+              key={i}
+              className="absolute cursor-pointer group pointer-events-auto"
+              animate={{
+                left: pathX,
+                top: pathY,
+                rotate: pathRotate,
+                scale: pathScale,
+              }}
+              transition={{
+                repeat: Infinity,
+                duration: 20,
+                ease: "easeInOut",
+              }}
+              whileHover={{ scale: 1.15, zIndex: 50 }}
+              onClick={() => onOpenModal && onOpenModal(c.memory)}
+            >
+              {/* Paper Plane Flight Swoosh Trail Badge */}
+              <div className="absolute -top-3 -right-3 z-30 flex h-7 w-7 items-center justify-center rounded-full bg-[#2ee6d6] text-black text-xs font-bold shadow-lg animate-bounce">
+                ✈️
+              </div>
+
+              <div className="w-28 sm:w-36 md:w-44 rounded-2xl bg-white p-2 shadow-[0_25px_60px_rgba(0,0,0,0.7)] transition-all duration-300 group-hover:shadow-[0_30px_70px_rgba(255,46,131,0.5)] border border-white/50">
+                {/* Washi tape clip */}
+                <div className="washi-tape" />
+
+                <div className="relative h-36 sm:h-48 md:h-56 w-full overflow-hidden rounded-xl bg-black">
+                  <img src={c.memory.src} alt="" className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <div className="absolute bottom-1.5 left-1.5 right-1.5 rounded-lg bg-black/70 px-2 py-1 text-[9px] sm:text-[11px] font-bold text-white backdrop-blur-md truncate text-left">
+                    #{String(c.memory.id).padStart(2, "0")} {c.memory.caption}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          );
+        })}
+      </motion.div>
+
+      {/* Floating 3D Musical Notes & Celebration Sparkles */}
+      <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
+        {["🎵", "✨", "💿", "💖", "🎂", "🎉"].map((icon, i) => (
+          <motion.div
+            key={i}
+            className="absolute text-xl sm:text-3xl"
+            style={{ left: `${20 + i * 12}%`, top: `${15 + (i % 3) * 26}%` }}
+            animate={{
+              y: [-12, 12, -12],
+              rotate: [-12, 12, -12],
+              opacity: [0.35, 0.85, 0.35],
+            }}
+            transition={{ repeat: Infinity, duration: 4 + i, ease: "easeInOut" }}
+          >
+            {icon}
+          </motion.div>
+        ))}
       </div>
 
       {/* Top Header Music Controls */}
@@ -93,27 +171,8 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         </button>
       </div>
 
-      {/* Floating 3D Celebration Particles */}
-      <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
-        {["🎵", "✨", "💿", "💖", "🎂", "🎉"].map((icon, i) => (
-          <motion.div
-            key={i}
-            className="absolute text-xl sm:text-3xl"
-            style={{ left: `${12 + i * 15}%`, top: `${15 + (i % 3) * 28}%` }}
-            animate={{
-              y: [-14, 14, -14],
-              rotate: [-14, 14, -14],
-              opacity: [0.35, 0.85, 0.35],
-            }}
-            transition={{ repeat: Infinity, duration: 4 + i, ease: "easeInOut" }}
-          >
-            {icon}
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Main Hero Container */}
-      <div className="relative z-20 flex min-h-screen flex-col items-center justify-center px-4 sm:px-6 text-center py-12">
+      {/* Main Hero Title Area */}
+      <div className="relative z-20 flex min-h-screen flex-col items-center justify-center px-4 sm:px-6 text-center">
         {/* Crown Badge */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
@@ -124,7 +183,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
           <span className="text-sm sm:text-base">👑</span> 12 AUGUST · HAPPIEST BIRTHDAY <span className="text-sm sm:text-base">✨</span>
         </motion.div>
 
-        {/* 3D Extruded Headline */}
+        {/* 3D Extruded Title */}
         <motion.div style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}>
           <h1 className="font-extrabold uppercase leading-[0.86] tracking-tight">
             <Line i={0} className="text-4xl sm:text-6xl lg:text-7xl text-[#f4efe6]">Happy</Line>
@@ -133,57 +192,21 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
           </h1>
         </motion.div>
 
-        {/* Continuous Auto-Changing Photo Spotlight with Zoom-In / Zoom-Out Animation! */}
-        <motion.div
-          style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}
-          className="relative mt-8 sm:mt-10 cursor-pointer group"
-          onClick={() => onOpenModal && onOpenModal(currentPhoto)}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.1, duration: 0.8 }}
+          className="mt-6 sm:mt-8 max-w-sm sm:max-w-md text-xs sm:text-base text-white/80 leading-relaxed"
         >
-          <div className="washi-tape" />
-
-          <div className="relative w-64 sm:w-80 md:w-96 rounded-2xl bg-white p-2.5 shadow-[0_30px_70px_rgba(0,0,0,0.8)] border border-white/50 transition-all duration-300 group-hover:shadow-[0_35px_80px_rgba(255,46,131,0.5)]">
-            <div className="relative h-64 sm:h-72 md:h-80 w-full overflow-hidden rounded-xl bg-black">
-              <AnimatePresence mode="wait">
-                <motion.img
-                  key={currentPhoto.id}
-                  src={currentPhoto.src}
-                  alt={currentPhoto.caption}
-                  initial={{ opacity: 0, scale: 1.3 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  transition={{
-                    opacity: { duration: 0.7 },
-                    scale: { duration: 4.5, ease: "easeInOut" },
-                  }}
-                  className="h-full w-full object-cover"
-                />
-              </AnimatePresence>
-
-              {/* Photo Overlay Badge */}
-              <div className="absolute left-3 top-3 z-20 flex items-center gap-2 rounded-full bg-black/75 px-3 py-1 text-xs font-bold text-white backdrop-blur-md border border-white/20">
-                <span className="animate-spin text-[#2ee6d6]">✨</span>
-                <span>Photo #{String(currentPhoto.id).padStart(2, "0")} / {heroSpotlightPhotos.length}</span>
-              </div>
-
-              {/* Caption Overlay */}
-              <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/95 via-black/60 to-transparent p-4 text-left">
-                <p className="text-base font-extrabold text-white truncate">{currentPhoto.caption}</p>
-                <p className="text-xs text-[#2ee6d6] font-semibold truncate">🎵 {currentPhoto.songTitle}</p>
-              </div>
-            </div>
-
-            <div className="mt-2 text-center text-xs font-semibold text-gray-700">
-              🔍 Tap photo to view lightbox & play song
-            </div>
-          </div>
-        </motion.div>
+          Mere pehle dost ke liye ek chhoti si duniya — banayi gayi yaadon, hansi aur dosti se. 💖
+        </motion.p>
 
         {/* Action CTAs */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.4 }}
-          className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4"
+          className="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4"
         >
           <button
             onClick={cardAudio?.startPlayAllSongs}
@@ -205,7 +228,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.7 }}
-          className="mt-10 sm:mt-12 flex flex-col items-center gap-1 text-white/50"
+          className="mt-10 sm:mt-14 flex flex-col items-center gap-1 text-white/50"
         >
           <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em]">scroll down for memories & songs</span>
           <motion.span animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.6 }}>↓</motion.span>
