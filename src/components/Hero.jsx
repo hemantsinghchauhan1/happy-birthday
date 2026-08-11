@@ -16,22 +16,17 @@ function Line({ children, i, className }) {
   );
 }
 
-const floatCards = [
-  { item: memories[10], pos: "top-[10%] left-[3%]", rot: -14, d: 0, size: "w-32 sm:w-44" },
-  { item: memories[11], pos: "top-[12%] right-[3%]", rot: 12, d: 0.4, size: "w-28 sm:w-40" },
-  { item: memories[0], pos: "top-[48%] left-[2%]", rot: 8, d: 0.6, size: "w-28 sm:w-36" },
-  { item: memories[1], pos: "top-[50%] right-[2%]", rot: -10, d: 0.8, size: "w-28 sm:w-36" },
-  { item: memories[6], pos: "bottom-[8%] left-[7%]", rot: -8, d: 1.1, size: "w-28 sm:w-36" },
-  { item: memories[3], pos: "bottom-[6%] right-[7%]", rot: 10, d: 1.3, size: "w-28 sm:w-36" },
-];
+// Split memories into two columns for vertical infinite 3D scrolling marquee
+const leftColMemories = [...memories.slice(0, 6), ...memories.slice(0, 6)];
+const rightColMemories = [...memories.slice(6, 12), ...memories.slice(6, 12)];
 
-export default function Hero({ music, cardAudio }) {
+export default function Hero({ music, cardAudio, onOpenModal }) {
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const sx = useSpring(mx, { stiffness: 60, damping: 20 });
   const sy = useSpring(my, { stiffness: 60, damping: 20 });
-  const rotX = useTransform(sy, [-0.5, 0.5], [12, -12]);
-  const rotY = useTransform(sx, [-0.5, 0.5], [-14, 14]);
+  const rotX = useTransform(sy, [-0.5, 0.5], [14, -14]);
+  const rotY = useTransform(sx, [-0.5, 0.5], [-16, 16]);
 
   const onMove = (e) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -55,42 +50,60 @@ export default function Hero({ music, cardAudio }) {
     >
       {/* 3D Radial Glow Backdrops */}
       <div className="pointer-events-none absolute inset-0 z-0">
-        <div className="absolute left-1/2 top-1/3 h-[75vh] w-[75vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#ff2e83]/25 blur-[140px]" />
+        <div className="absolute left-1/2 top-1/3 h-[80vh] w-[80vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#ff2e83]/25 blur-[140px]" />
         <div className="absolute left-1/5 bottom-0 h-[50vh] w-[50vh] rounded-full bg-[#2ee6d6]/20 blur-[130px]" />
         <div className="absolute right-1/5 top-1/4 h-[45vh] w-[45vh] rounded-full bg-[#8b5cff]/25 blur-[130px]" />
       </div>
 
-      {/* Floating 3D Polaroid Cards with Interactive Parallax */}
-      <motion.div
-        className="absolute inset-0 z-10 hidden md:block"
-        style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}
-      >
-        {floatCards.map((c, i) => (
-          <motion.div
-            key={i}
-            className={`absolute ${c.pos} float-slow cursor-pointer group`}
-            initial={{ opacity: 0, scale: 0.6, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ delay: 0.8 + i * 0.15, duration: 0.8 }}
-            whileHover={{ scale: 1.12, zIndex: 40 }}
-          >
-            <div
-              className={`${c.size} rounded-2xl bg-white p-2 shadow-[0_25px_60px_rgba(0,0,0,0.7)] transition-transform duration-300 group-hover:shadow-[0_30px_70px_rgba(255,46,131,0.4)] border border-white/40`}
-              style={{ transform: `rotate(${c.rot}deg)`, animationDelay: `${c.d}s` }}
+      {/* LEFT COLUMN: 3D Vertical Scrolling Marquee UP */}
+      <div className="absolute left-2 sm:left-6 top-0 bottom-0 z-10 hidden md:block w-36 sm:w-44 overflow-hidden pointer-events-none">
+        <motion.div
+          animate={{ y: ["0%", "-50%"] }}
+          transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
+          className="flex flex-col gap-6 pt-4 pointer-events-auto"
+        >
+          {leftColMemories.map((m, i) => (
+            <motion.div
+              key={`left-${i}`}
+              whileHover={{ scale: 1.1, zIndex: 40 }}
+              onClick={() => onOpenModal && onOpenModal(m)}
+              className="cursor-pointer rounded-2xl bg-white p-2 shadow-[0_20px_40px_rgba(0,0,0,0.6)] rotate-[-6deg] transition-all hover:shadow-[0_25px_60px_rgba(255,46,131,0.4)] border border-white/40"
             >
-              {/* Tape clip */}
-              <div className="washi-tape" />
-
-              <div className="relative h-44 w-full overflow-hidden rounded-xl bg-black sm:h-56">
-                <img src={c.item.src} alt="" className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                <div className="absolute bottom-2 left-2 right-2 rounded-lg bg-black/60 px-2 py-1 text-[10px] font-bold text-white backdrop-blur-md truncate">
-                  #{String(c.item.id).padStart(2, "0")} {c.item.caption}
+              <div className="relative h-44 sm:h-52 w-full overflow-hidden rounded-xl bg-black">
+                <img src={m.src} alt="" className="h-full w-full object-cover" />
+                <div className="absolute bottom-2 left-2 right-2 rounded-lg bg-black/70 px-2 py-1 text-[10px] font-bold text-white backdrop-blur-md truncate">
+                  #{String(m.id).padStart(2, "0")} {m.caption}
                 </div>
               </div>
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* RIGHT COLUMN: 3D Vertical Scrolling Marquee DOWN */}
+      <div className="absolute right-2 sm:right-6 top-0 bottom-0 z-10 hidden md:block w-36 sm:w-44 overflow-hidden pointer-events-none">
+        <motion.div
+          animate={{ y: ["-50%", "0%"] }}
+          transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
+          className="flex flex-col gap-6 pt-4 pointer-events-auto"
+        >
+          {rightColMemories.map((m, i) => (
+            <motion.div
+              key={`right-${i}`}
+              whileHover={{ scale: 1.1, zIndex: 40 }}
+              onClick={() => onOpenModal && onOpenModal(m)}
+              className="cursor-pointer rounded-2xl bg-white p-2 shadow-[0_20px_40px_rgba(0,0,0,0.6)] rotate-[6deg] transition-all hover:shadow-[0_25px_60px_rgba(46,230,214,0.4)] border border-white/40"
+            >
+              <div className="relative h-44 sm:h-52 w-full overflow-hidden rounded-xl bg-black">
+                <img src={m.src} alt="" className="h-full w-full object-cover" />
+                <div className="absolute bottom-2 left-2 right-2 rounded-lg bg-black/70 px-2 py-1 text-[10px] font-bold text-white backdrop-blur-md truncate">
+                  #{String(m.id).padStart(2, "0")} {m.caption}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
 
       {/* Floating 3D Musical Notes & Celebration Sparkles */}
       <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
@@ -98,7 +111,7 @@ export default function Hero({ music, cardAudio }) {
           <motion.div
             key={i}
             className="absolute text-2xl sm:text-3xl"
-            style={{ left: `${15 + i * 15}%`, top: `${20 + (i % 3) * 25}%` }}
+            style={{ left: `${25 + i * 12}%`, top: `${20 + (i % 3) * 25}%` }}
             animate={{
               y: [-15, 15, -15],
               rotate: [-15, 15, -15],
@@ -138,8 +151,11 @@ export default function Hero({ music, cardAudio }) {
         </button>
       </div>
 
-      {/* Hero Central Headline */}
-      <div className="relative z-20 flex min-h-screen flex-col items-center justify-center px-5 text-center">
+      {/* Hero Central 3D Headline Area */}
+      <motion.div
+        style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}
+        className="relative z-20 flex min-h-screen flex-col items-center justify-center px-5 text-center"
+      >
         {/* Crown Badge */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
@@ -150,10 +166,11 @@ export default function Hero({ music, cardAudio }) {
           <span className="text-base">👑</span> 12 AUGUST · HAPPIEST BIRTHDAY <span className="text-base">✨</span>
         </motion.div>
 
+        {/* 3D Extruded Title */}
         <h1 className="font-extrabold uppercase leading-[0.86] tracking-tight">
           <Line i={0} className="text-4xl sm:text-6xl lg:text-7xl text-[#f4efe6]">Happy</Line>
-          <Line i={1} className="text-5xl sm:text-7xl lg:text-8xl text-[#ff2e83] neon-magenta">Birthday</Line>
-          <Line i={2} className="font-serif-i italic normal-case text-5xl sm:text-7xl lg:text-8xl text-[#ffcf5c] neon-gold">Mithlesh</Line>
+          <Line i={1} className="text-5xl sm:text-7xl lg:text-8xl text-[#ff2e83] text-3d-title">Birthday</Line>
+          <Line i={2} className="font-serif-i italic normal-case text-5xl sm:text-7xl lg:text-8xl text-[#ffcf5c] text-3d-gold">Mithlesh</Line>
         </h1>
 
         <motion.p
@@ -197,7 +214,7 @@ export default function Hero({ music, cardAudio }) {
           <span className="text-xs uppercase tracking-[0.3em]">scroll down for memories & songs</span>
           <motion.span animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.6 }}>↓</motion.span>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Floating 3D Balloons */}
       {["#ff2e83", "#2ee6d6", "#ffcf5c"].map((c, i) => (

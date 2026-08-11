@@ -16,6 +16,29 @@
   border: 1px solid rgba(255, 255, 255, 0.09);
 }
 
+.text-3d-title {
+  text-shadow:
+    0 1px 0 #cc2266,
+    0 2px 0 #b31b57,
+    0 3px 0 #991448,
+    0 4px 0 #800e39,
+    0 5px 0 #66072b,
+    0 6px 1px rgba(0, 0, 0, 0.4),
+    0 0 15px rgba(255, 46, 131, 0.8),
+    0 0 35px rgba(255, 46, 131, 0.5),
+    0 15px 35px rgba(0, 0, 0, 0.7);
+}
+
+.text-3d-gold {
+  text-shadow:
+    0 1px 0 #d4a017,
+    0 2px 0 #b8860b,
+    0 3px 0 #996515,
+    0 4px 0 #7b4c0b,
+    0 5px 15px rgba(255, 207, 92, 0.8),
+    0 10px 25px rgba(0, 0, 0, 0.6);
+}
+
 .neon-magenta {
   text-shadow: 0 0 8px rgba(255, 46, 131, 0.7), 0 0 30px rgba(255, 46, 131, 0.45), 0 0 70px rgba(255, 46, 131, 0.3);
 }
