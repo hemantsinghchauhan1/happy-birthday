@@ -17,16 +17,17 @@ function Line({ children, i, className }) {
   );
 }
 
-// Fixed Corner Frame Configurations
-const cornerFrames = [
-  { id: 0, pos: "top-[12%] left-[3%] sm:left-[5%]", rot: -12, size: "w-28 sm:w-36 md:w-44", label: "Top Left" },
-  { id: 1, pos: "top-[14%] right-[3%] sm:right-[5%]", rot: 10, size: "w-28 sm:w-36 md:w-40", label: "Top Right" },
-  { id: 2, pos: "bottom-[12%] right-[3%] sm:right-[5%]", rot: -8, size: "w-28 sm:w-36 md:w-40", label: "Bottom Right" },
-  { id: 3, pos: "bottom-[14%] left-[3%] sm:left-[5%]", rot: 9, size: "w-28 sm:w-36 md:w-36", label: "Bottom Left" },
+// 4 Fixed Landing Pads Coordinates (Percentage based for responsiveness)
+const padCoordinates = [
+  { id: 0, x: "4vw", y: "12vh", rot: -12, name: "Top-Left" },
+  { id: 1, x: "72vw", y: "14vh", rot: 10, name: "Top-Right" },
+  { id: 2, x: "70vw", y: "62vh", rot: -8, name: "Bottom-Right" },
+  { id: 3, x: "4vw", y: "60vh", rot: 9, name: "Bottom-Left" },
 ];
 
 export default function Hero({ music, cardAudio, onOpenModal }) {
-  const [photoStartIndex, setPhotoStartIndex] = useState(0);
+  const [activePad, setActivePad] = useState(0); // 0, 1, 2, 3
+  const [photoOffset, setPhotoOffset] = useState(0);
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -41,13 +42,22 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
     my.set((e.clientY - r.top) / r.height - 0.5);
   };
 
-  // Clockwise Photo Jump Cycle: Images jump from Frame 0 -> 1 -> 2 -> 3 -> New Image!
+  // Continuous Parabolic Frog Leap Timer: Leaps every 3 seconds!
   useEffect(() => {
     const timer = setInterval(() => {
-      setPhotoStartIndex((prev) => (prev + 1) % memories.length);
-    }, 3800);
+      setActivePad((prev) => {
+        const nextPad = (prev + 1) % 4;
+        if (nextPad === 0) {
+          setPhotoOffset((po) => (po + 1) % memories.length);
+        }
+        return nextPad;
+      });
+    }, 3200);
     return () => clearInterval(timer);
   }, []);
+
+  const currentPad = padCoordinates[activePad];
+  const activeMemory = memories[(photoOffset + activePad) % memories.length];
 
   const scrollToCarousel = () => {
     const carouselEl = document.querySelector('[data-testid="memory-carousel"]');
@@ -70,53 +80,95 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         <div className="absolute right-1/5 top-1/4 h-[45vh] w-[45vh] rounded-full bg-[#8b5cff]/25 blur-[130px]" />
       </div>
 
-      {/* 4 Fixed Corner Frames with Clockwise Jumping Images */}
-      <motion.div
-        className="absolute inset-0 z-10 block"
-        style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}
-      >
-        {cornerFrames.map((frame, i) => {
-          const currentMemory = memories[(photoStartIndex + i) % memories.length];
+      {/* 4 Fixed Landing Pads */}
+      <div className="absolute inset-0 z-10 hidden md:block pointer-events-none">
+        {padCoordinates.map((pad, idx) => {
+          const padMemory = memories[(photoOffset + idx) % memories.length];
+          const isCurrentActive = idx === activePad;
 
           return (
             <div
-              key={frame.id}
-              className={`absolute ${frame.pos} cursor-pointer group`}
-              onClick={() => onOpenModal && onOpenModal(currentMemory)}
+              key={pad.id}
+              className="absolute pointer-events-auto cursor-pointer group"
+              style={{ left: pad.x, top: pad.y }}
+              onClick={() => onOpenModal && onOpenModal(padMemory)}
             >
-              <motion.div
-                whileHover={{ scale: 1.12, zIndex: 40 }}
-                className={`${frame.size} rounded-2xl bg-white p-1.5 sm:p-2 shadow-[0_25px_60px_rgba(0,0,0,0.7)] transition-all duration-300 group-hover:shadow-[0_30px_70px_rgba(255,46,131,0.4)] border border-white/50`}
-                style={{ transform: `rotate(${frame.rot}deg)` }}
+              <div
+                className={`w-32 sm:w-40 md:w-44 rounded-2xl p-2 transition-all duration-500 ${
+                  isCurrentActive
+                    ? "bg-white ring-4 ring-[#ff2e83] shadow-[0_0_40px_rgba(255,46,131,0.6)] scale-105"
+                    : "bg-white/70 opacity-60 shadow-xl group-hover:opacity-100 group-hover:scale-105"
+                }`}
+                style={{ transform: `rotate(${pad.rot}deg)` }}
               >
                 {/* Washi tape clip */}
                 <div className="washi-tape" />
 
-                {/* Jumping Image Container */}
-                <div className="relative h-32 sm:h-44 md:h-56 w-full overflow-hidden rounded-xl bg-black">
-                  <AnimatePresence mode="wait">
-                    <motion.img
-                      key={currentMemory.id}
-                      src={currentMemory.src}
-                      alt={currentMemory.caption}
-                      initial={{ opacity: 0, scale: 1.2, x: -30, rotate: -5 }}
-                      animate={{ opacity: 1, scale: 1, x: 0, rotate: 0 }}
-                      exit={{ opacity: 0, scale: 0.8, x: 30, rotate: 5 }}
-                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                      className="h-full w-full object-cover"
-                    />
-                  </AnimatePresence>
-
-                  {/* Photo Title Overlay */}
-                  <div className="absolute bottom-1.5 left-1.5 right-1.5 rounded-lg bg-black/75 px-2 py-1 text-[9px] sm:text-[11px] font-bold text-white backdrop-blur-md truncate text-left border border-white/10">
-                    <span className="text-[#2ee6d6] mr-1">#{String(currentMemory.id).padStart(2, "0")}</span>
-                    {currentMemory.caption}
+                <div className="relative h-44 sm:h-52 w-full overflow-hidden rounded-xl bg-black">
+                  <img src={padMemory.src} alt="" className="h-full w-full object-cover" />
+                  <div className="absolute bottom-1.5 left-1.5 right-1.5 rounded-lg bg-black/75 px-2 py-1 text-[10px] font-bold text-white backdrop-blur-md truncate text-left">
+                    #{String(padMemory.id).padStart(2, "0")} {padMemory.caption}
                   </div>
                 </div>
-              </motion.div>
+              </div>
             </div>
           );
         })}
+      </div>
+
+      {/* Dynamic 3D Frog Leap Parabolic Arc Card (Jumps from Pad to Pad) */}
+      <motion.div
+        className="absolute z-30 hidden md:block pointer-events-auto cursor-pointer"
+        animate={{
+          left: currentPad.x,
+          top: currentPad.y,
+          rotate: currentPad.rot,
+        }}
+        transition={{
+          duration: 1.1,
+          ease: [0.34, 1.56, 0.64, 1], // Springy Frog Leap physics easing curve!
+        }}
+        onClick={() => onOpenModal && onOpenModal(activeMemory)}
+      >
+        <motion.div
+          animate={{
+            y: [0, -90, 0], // Parabolic arc leap up into the air and land!
+            scale: [1, 1.25, 1],
+            rotateZ: [0, 15, 0],
+          }}
+          transition={{
+            duration: 1.1,
+            ease: "easeInOut",
+          }}
+          className="relative w-36 sm:w-44 md:w-48 rounded-2xl bg-white p-2.5 shadow-[0_30px_80px_rgba(255,46,131,0.7)] border-2 border-[#ff2e83]"
+        >
+          {/* Frog Leap Rocket Badge */}
+          <div className="absolute -top-3 -right-3 z-40 flex h-8 w-8 items-center justify-center rounded-full bg-[#ff2e83] text-white text-sm font-bold shadow-lg animate-bounce">
+            🐸
+          </div>
+
+          {/* Washi tape clip */}
+          <div className="washi-tape" />
+
+          <div className="relative h-48 sm:h-56 md:h-60 w-full overflow-hidden rounded-xl bg-black">
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={activeMemory.id}
+                src={activeMemory.src}
+                alt={activeMemory.caption}
+                initial={{ opacity: 0, scale: 1.2 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.4 }}
+                className="h-full w-full object-cover"
+              />
+            </AnimatePresence>
+            <div className="absolute bottom-2 left-2 right-2 rounded-lg bg-black/85 px-2.5 py-1 text-xs font-extrabold text-white backdrop-blur-md truncate text-left border border-white/20">
+              <span className="text-[#2ee6d6] mr-1">#{String(activeMemory.id).padStart(2, "0")}</span>
+              {activeMemory.caption}
+            </div>
+          </div>
+        </motion.div>
       </motion.div>
 
       {/* Floating 3D Musical Notes & Celebration Sparkles */}
