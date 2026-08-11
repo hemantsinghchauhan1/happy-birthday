@@ -1,10 +1,28 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLenis } from "lenis/react";
 
 export default function PhotoModal({ item, onClose, isPlaying, onToggleAudio }) {
   const [zoom, setZoom] = useState(1);
+  const lenis = useLenis();
 
-  // Reset zoom on photo change or close
+  // Lock background body scroll & freeze Lenis smooth scroll while lightbox modal is open!
+  useEffect(() => {
+    if (item) {
+      document.body.style.overflow = "hidden";
+      if (lenis) lenis.stop();
+    } else {
+      document.body.style.overflow = "";
+      if (lenis) lenis.start();
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+      if (lenis) lenis.start();
+    };
+  }, [item, lenis]);
+
+  // Reset zoom on photo change
   useEffect(() => {
     setZoom(1);
   }, [item]);
@@ -27,7 +45,7 @@ export default function PhotoModal({ item, onClose, isPlaying, onToggleAudio }) 
           className="absolute inset-0 bg-black/90 backdrop-blur-xl"
         />
 
-        {/* Modal Window — Scrollable max-h-[88vh] for Mobile Responsiveness! */}
+        {/* Modal Window — Scrollable max-h-[88vh] with Frozen Background Page! */}
         <motion.div
           initial={{ opacity: 0, scale: 0.85, y: 30 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -89,7 +107,7 @@ export default function PhotoModal({ item, onClose, isPlaying, onToggleAudio }) 
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-12 items-center">
-            {/* 100% Rock-Solid Static Image Area (0 Wobble / 0 Motion Drag!) */}
+            {/* 100% Rock-Solid Static Image Area */}
             <div className="md:col-span-7 relative h-52 sm:h-80 md:h-[440px] w-full overflow-hidden rounded-xl sm:rounded-2xl bg-black flex items-center justify-center border border-white/10 p-1">
               <img
                 key={item.id}
