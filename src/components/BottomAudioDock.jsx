@@ -9,26 +9,26 @@ export default function BottomAudioDock({ activeCardId, isModalOpen, onToggleAud
 
   return createPortal(
     <div
-      className="fixed inset-x-0 z-[9999] flex justify-center pointer-events-none px-3 sm:px-4"
+      className="fixed inset-x-0 z-[9999] flex justify-center pointer-events-none px-3.5 sm:px-4"
       style={{
         position: "fixed",
         left: 0,
         right: 0,
-        bottom: "max(14px, env(safe-area-inset-bottom, 14px))",
+        bottom: "max(24px, env(safe-area-inset-bottom, 24px))",
         zIndex: 9999,
       }}
       data-testid="bottom-audio-dock"
     >
-      <div className="w-full max-w-xl h-16 sm:h-20 pointer-events-auto relative flex items-center justify-between gap-2 sm:gap-4 rounded-2xl sm:rounded-3xl bg-[#0b0b14]/95 p-2 sm:p-3 px-3 sm:px-4 text-white backdrop-blur-2xl border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.9)] overflow-hidden">
+      <div className="w-full max-w-xl h-16 sm:h-20 pointer-events-auto relative flex items-center justify-between gap-2 sm:gap-4 rounded-2xl sm:rounded-3xl bg-[#0b0b14]/95 p-2.5 sm:p-3 px-3 sm:px-4 text-white backdrop-blur-2xl border border-white/20 shadow-[0_25px_60px_rgba(0,0,0,0.95)] overflow-hidden">
         {/* Static neon top border line */}
-        <div className="absolute -top-[1px] left-6 right-6 h-[2px] bg-gradient-to-r from-[#2ee6d6] via-[#ff2e83] to-[#ffcf5c] rounded-full" />
+        <div className="absolute -top-[1px] left-6 right-6 h-[2px] bg-gradient-to-r from-[#2ee6d6] via-[#ff2e83] to-[#ffcf5c] rounded-full animate-pulse" />
 
         {/* Left: Thumbnail & Info */}
         <div
-          className="flex items-center gap-2 sm:gap-3 cursor-pointer group overflow-hidden h-full"
+          className="flex items-center gap-2.5 sm:gap-3 cursor-pointer group overflow-hidden h-full"
           onClick={() => onOpenModal && onOpenModal(currentItem)}
         >
-          <div className="relative h-9 w-9 sm:h-12 sm:w-12 flex-shrink-0 overflow-hidden rounded-lg sm:rounded-xl bg-gray-900 border border-white/20">
+          <div className="relative h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0 overflow-hidden rounded-xl bg-gray-900 border border-white/20">
             <img
               src={currentItem.src}
               alt={currentItem.caption}
@@ -36,7 +36,7 @@ export default function BottomAudioDock({ activeCardId, isModalOpen, onToggleAud
             />
             {/* Vinyl badge */}
             <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-              <span className="text-[10px] sm:text-sm">💿</span>
+              <span className="text-xs sm:text-sm">💿</span>
             </div>
           </div>
 
