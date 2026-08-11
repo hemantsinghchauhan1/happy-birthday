@@ -42,7 +42,7 @@ export default function Wishes() {
               Sach boloon toh jab bhi kabhi peeche mudkar sochta hoon, lagta hai abhi toh aaya hoon AMU... jaise kal hi ki baat ho. Sir Ross Masood Hall ke gate par jab tu mera intezaar kar raha tha, us anjaan sheher mein pehla haath tune hi milaaya tha.
             </p>
             <p>
-              Kitne hi saal beet gaye, par teri dosti aur tera apnapan aaj bhi wahi hai. Zindagi ki is kitaab mein hazaron safhe hain, par sabse khoobsurat aur khaas panna sirf teri dosti ka hai.
+              Bhaley hi aaj humari roz baat nahi hoti, par jab bhi hoti hai — lagta hai hum aaj bhi bilkul pehle din wale dost hain. Wahi comfort, wahi apnapan.
             </p>
             <p className="font-bold text-[#2ee6d6]">
               Bas shukriya kehna tha ki tu meri zindagi ka itna khoobsurat hissa hai. Happy Birthday Mere Bhai!

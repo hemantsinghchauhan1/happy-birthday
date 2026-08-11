@@ -27,9 +27,9 @@ const chapters = [
   },
   {
     n: "04",
-    hi: "Waqt Badla, Par Tu Nahi Badla",
-    sub: "Unchanged Loyalty",
-    body: "Kitne hi saal beet gaye, mausam badal gaye... par teri imandari aur tera apnapan aaj bhi wahi hai.",
+    hi: "Utni Baat Na Ho, Par Yaari Wahi Hai",
+    sub: "Unchanged Bond",
+    body: "Bhaley hi aaj humari har din baat nahi hoti, par jab bhi hoti hai — lagta hai jaise hum aaj bhi bilkul wahi pehle din wale dost hain.",
     accent: "#8b5cff",
     icon: "✨",
   },
