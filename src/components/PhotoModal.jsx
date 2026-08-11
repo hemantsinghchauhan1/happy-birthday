@@ -41,7 +41,7 @@ export default function PhotoModal({ item, onClose, isPlaying, onToggleAudio }) 
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.88, y: 30 }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-3xl bg-[#080811] p-4 sm:p-7 border border-white/20 shadow-[0_30px_90px_rgba(0,0,0,0.95)] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+          className="relative z-10 max-h-[92vh] w-full max-w-4xl overflow-y-auto rounded-3xl bg-[#080811] p-4 sm:p-7 border border-white/20 shadow-[0_30px_90px_rgba(0,0,0,0.95)] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         >
           {/* Top Header Bar — Clean Title & Close */}
           <div className="mb-4 sm:mb-6 flex items-center justify-between border-b border-white/10 pb-3 sm:pb-4">
@@ -65,13 +65,13 @@ export default function PhotoModal({ item, onClose, isPlaying, onToggleAudio }) 
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-12 items-center">
-            {/* Cinematic Large Photo Area with Automatic Ken Burns Slow Zoom */}
-            <div className="md:col-span-7 relative h-64 sm:h-96 md:h-[480px] w-full overflow-hidden rounded-2xl sm:rounded-3xl bg-black/90 flex items-center justify-center border border-white/15 p-2 shadow-2xl">
+            {/* Cinematic Extra-Large Photo Viewport with Automatic Ken Burns Slow Zoom */}
+            <div className="md:col-span-7 relative h-80 sm:h-[460px] md:h-[540px] w-full overflow-hidden rounded-2xl sm:rounded-3xl bg-black/90 flex items-center justify-center border border-white/15 p-2 shadow-2xl">
               <motion.img
                 key={item.id}
                 src={item.src}
                 alt={item.caption}
-                animate={{ scale: [1, 1.06, 1] }}
+                animate={{ scale: [1.02, 1.08, 1.02] }}
                 transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
                 className="h-full w-full object-contain rounded-xl select-none pointer-events-none"
               />
@@ -88,8 +88,8 @@ export default function PhotoModal({ item, onClose, isPlaying, onToggleAudio }) 
                   {item.sub}
                 </p>
 
-                {/* Shifted Lower: Card Anthem Player Section */}
-                <div className="mt-8 sm:mt-10 rounded-2xl bg-white/5 p-4 sm:p-5 border border-white/15 backdrop-blur-xl shadow-xl">
+                {/* Card Anthem Player Section */}
+                <div className="mt-6 sm:mt-8 rounded-2xl bg-white/5 p-4 sm:p-5 border border-white/15 backdrop-blur-xl shadow-xl">
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3 overflow-hidden">
                       <div className={`flex h-11 w-11 sm:h-13 sm:w-13 flex-shrink-0 items-center justify-center rounded-full bg-[#ff2e83] ${isPlaying ? "spin-vinyl shadow-lg shadow-[#ff2e83]/50" : ""}`}>
@@ -127,13 +127,6 @@ export default function PhotoModal({ item, onClose, isPlaying, onToggleAudio }) 
                     </div>
                   )}
                 </div>
-              </div>
-
-              {/* Heartfelt Quote Footer */}
-              <div className="mt-8 sm:mt-10 border-t border-white/10 pt-4 text-center sm:text-left">
-                <p className="font-serif-i italic text-base sm:text-lg text-white/80">
-                  "Har photo ek kahani hai, har gaana ek yaad."
-                </p>
               </div>
             </div>
           </div>
