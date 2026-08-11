@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import { memories } from "../data";
 
 export default function BottomAudioDock({ activeCardId, onToggleAudio, onStopAudio, onOpenModal }) {
@@ -6,11 +7,15 @@ export default function BottomAudioDock({ activeCardId, onToggleAudio, onStopAud
 
   const currentItem = memories.find((m) => m.id === activeCardId) || memories[0];
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-x-0 bottom-3 sm:bottom-5 z-50 flex justify-center pointer-events-none px-3 sm:px-4"
+      className="fixed inset-x-0 z-[9999] flex justify-center pointer-events-none px-3 sm:px-4"
       style={{
+        position: "fixed",
+        left: 0,
+        right: 0,
         bottom: "max(14px, env(safe-area-inset-bottom, 14px))",
+        zIndex: 9999,
       }}
       data-testid="bottom-audio-dock"
     >
@@ -76,6 +81,7 @@ export default function BottomAudioDock({ activeCardId, onToggleAudio, onStopAud
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
