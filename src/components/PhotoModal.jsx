@@ -89,26 +89,17 @@ export default function PhotoModal({ item, onClose, isPlaying, onToggleAudio }) 
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-12 items-center">
-            {/* Stable Non-Dancing Zoomable Image Area */}
-            <div className="md:col-span-7 relative h-52 sm:h-80 md:h-[440px] w-full overflow-hidden rounded-xl sm:rounded-2xl bg-black flex items-center justify-center border border-white/10">
-              <motion.img
+            {/* 100% Rock-Solid Static Image Area (0 Wobble / 0 Motion Drag!) */}
+            <div className="md:col-span-7 relative h-52 sm:h-80 md:h-[440px] w-full overflow-hidden rounded-xl sm:rounded-2xl bg-black flex items-center justify-center border border-white/10 p-1">
+              <img
                 key={item.id}
                 src={item.src}
                 alt={item.caption}
-                animate={{ scale: zoom }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
-                drag={zoom > 1}
-                dragElastic={0.05}
-                dragConstraints={{
-                  left: -80 * (zoom - 1),
-                  right: 80 * (zoom - 1),
-                  top: -80 * (zoom - 1),
-                  bottom: 80 * (zoom - 1),
+                style={{
+                  transform: `scale(${zoom})`,
+                  transition: "transform 0.25s ease-out",
                 }}
-                className={`max-h-full max-w-full object-contain rounded-lg select-none ${
-                  zoom > 1 ? "cursor-grab active:cursor-grabbing" : ""
-                }`}
-                style={{ touchAction: zoom > 1 ? "none" : "pan-y" }}
+                className="max-h-full max-w-full object-contain rounded-lg select-none pointer-events-none"
               />
 
               {/* Zoom instruction overlay */}
@@ -158,7 +149,7 @@ export default function PhotoModal({ item, onClose, isPlaying, onToggleAudio }) 
                     </button>
                   </div>
 
-                  {/* 100% Static Playing Track Audio Indicator (Fixed Height h-7 = 0 Jitter!) */}
+                  {/* 100% Static Playing Track Audio Indicator */}
                   {isPlaying && (
                     <div className="mt-3 flex items-center justify-center gap-1.5 border-t border-white/10 pt-2.5 h-7">
                       <div className="w-1 h-3 bg-[#2ee6d6] rounded-full" />

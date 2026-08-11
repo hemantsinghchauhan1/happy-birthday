@@ -1,9 +1,9 @@
 import { createPortal } from "react-dom";
 import { memories } from "../data";
 
-export default function BottomAudioDock({ activeCardId, onToggleAudio, onStopAudio, onOpenModal }) {
-  // Hide dock completely if no card song is currently playing
-  if (!activeCardId) return null;
+export default function BottomAudioDock({ activeCardId, isModalOpen, onToggleAudio, onStopAudio, onOpenModal }) {
+  // Hide dock completely if no song is playing OR if detail lightbox modal is open!
+  if (!activeCardId || isModalOpen) return null;
 
   const currentItem = memories.find((m) => m.id === activeCardId) || memories[0];
 
@@ -45,7 +45,7 @@ export default function BottomAudioDock({ activeCardId, onToggleAudio, onStopAud
               <span className="text-[9px] sm:text-xs font-semibold uppercase tracking-wider truncate text-[#ff2e83]">
                 Playing #{String(currentItem.id).padStart(2, "0")}
               </span>
-              {/* Static 3-Pillar Audio Icon (0 Height Animation = 0 Jitter!) */}
+              {/* Static 3-Pillar Audio Icon */}
               <span className="flex items-center gap-0.5 flex-shrink-0">
                 <span className="h-3 w-1 bg-[#2ee6d6] rounded-full" />
                 <span className="h-4 w-1 bg-[#ff2e83] rounded-full" />
