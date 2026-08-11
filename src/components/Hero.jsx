@@ -17,7 +17,7 @@ function Line({ children, i, className }) {
   );
 }
 
-// 4 Fixed Landing Pads Coordinates (Percentage based for responsiveness)
+// 4 Fixed Landing Pads Coordinates (Percentage based)
 const padCoordinates = [
   { id: 0, x: "4vw", y: "12vh", rot: -12, name: "Top-Left" },
   { id: 1, x: "72vw", y: "14vh", rot: 10, name: "Top-Right" },
@@ -42,7 +42,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
     my.set((e.clientY - r.top) / r.height - 0.5);
   };
 
-  // Continuous Parabolic Frog Leap Timer: Leaps every 3 seconds!
+  // Paper Crumple & Airplane Flight Cycle every 3.6 seconds!
   useEffect(() => {
     const timer = setInterval(() => {
       setActivePad((prev) => {
@@ -52,7 +52,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         }
         return nextPad;
       });
-    }, 3200);
+    }, 3600);
     return () => clearInterval(timer);
   }, []);
 
@@ -116,35 +116,37 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         })}
       </div>
 
-      {/* Dynamic 3D Frog Leap Parabolic Arc Card (Jumps from Pad to Pad) */}
+      {/* 3D Paper Crumple -> Paper Airplane Flight Arc -> Polaroid Unfold Landing Container */}
       <motion.div
         className="absolute z-30 hidden md:block pointer-events-auto cursor-pointer"
         animate={{
           left: currentPad.x,
           top: currentPad.y,
-          rotate: currentPad.rot,
         }}
         transition={{
-          duration: 1.1,
-          ease: [0.34, 1.56, 0.64, 1], // Springy Frog Leap physics easing curve!
+          duration: 1.4,
+          ease: [0.25, 1, 0.5, 1],
         }}
         onClick={() => onOpenModal && onOpenModal(activeMemory)}
       >
         <motion.div
           animate={{
-            y: [0, -90, 0], // Parabolic arc leap up into the air and land!
-            scale: [1, 1.25, 1],
-            rotateZ: [0, 15, 0],
+            // 3-Phase Animation: 1. Crumple -> 2. Soar in Flight Arc -> 3. Unfold & Land
+            scale: [1, 0.2, 1.35, 1],
+            rotateZ: [0, 540, 720, currentPad.rot],
+            y: [0, -140, -100, 0],
+            borderRadius: ["16px", "999px", "16px", "16px"],
           }}
           transition={{
-            duration: 1.1,
+            duration: 1.4,
             ease: "easeInOut",
+            times: [0, 0.25, 0.75, 1],
           }}
-          className="relative w-36 sm:w-44 md:w-48 rounded-2xl bg-white p-2.5 shadow-[0_30px_80px_rgba(255,46,131,0.7)] border-2 border-[#ff2e83]"
+          className="relative w-36 sm:w-44 md:w-48 rounded-2xl bg-white p-2.5 shadow-[0_30px_90px_rgba(255,46,131,0.8)] border-2 border-[#ff2e83] overflow-hidden"
         >
-          {/* Frog Leap Rocket Badge */}
-          <div className="absolute -top-3 -right-3 z-40 flex h-8 w-8 items-center justify-center rounded-full bg-[#ff2e83] text-white text-sm font-bold shadow-lg animate-bounce">
-            🐸
+          {/* Flying Jet Trail Badge */}
+          <div className="absolute -top-3 -right-3 z-40 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-r from-[#ff2e83] to-[#2ee6d6] text-white text-base font-bold shadow-xl animate-pulse">
+            ✈️
           </div>
 
           {/* Washi tape clip */}
@@ -156,13 +158,14 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
                 key={activeMemory.id}
                 src={activeMemory.src}
                 alt={activeMemory.caption}
-                initial={{ opacity: 0, scale: 1.2 }}
+                initial={{ opacity: 0, scale: 1.3 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.4 }}
+                exit={{ opacity: 0, scale: 0.3 }}
+                transition={{ duration: 0.5 }}
                 className="h-full w-full object-cover"
               />
             </AnimatePresence>
+
             <div className="absolute bottom-2 left-2 right-2 rounded-lg bg-black/85 px-2.5 py-1 text-xs font-extrabold text-white backdrop-blur-md truncate text-left border border-white/20">
               <span className="text-[#2ee6d6] mr-1">#{String(activeMemory.id).padStart(2, "0")}</span>
               {activeMemory.caption}
