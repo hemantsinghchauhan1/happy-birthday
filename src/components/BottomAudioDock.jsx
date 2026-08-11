@@ -19,13 +19,13 @@ export default function BottomAudioDock({ activeCardId, onToggleAudio, onStopAud
       }}
       data-testid="bottom-audio-dock"
     >
-      <div className="w-full max-w-xl pointer-events-auto relative flex items-center justify-between gap-2 sm:gap-4 rounded-2xl sm:rounded-3xl bg-[#0b0b14]/95 p-2 sm:p-3 px-3 sm:px-4 text-white backdrop-blur-2xl border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.9)]">
-        {/* Neon accent top bar line */}
-        <div className="absolute -top-[1px] left-6 right-6 h-[2px] bg-gradient-to-r from-[#2ee6d6] via-[#ff2e83] to-[#ffcf5c] rounded-full animate-pulse" />
+      <div className="w-full max-w-xl h-16 sm:h-20 pointer-events-auto relative flex items-center justify-between gap-2 sm:gap-4 rounded-2xl sm:rounded-3xl bg-[#0b0b14]/95 p-2 sm:p-3 px-3 sm:px-4 text-white backdrop-blur-2xl border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.9)] overflow-hidden">
+        {/* Static neon top border line */}
+        <div className="absolute -top-[1px] left-6 right-6 h-[2px] bg-gradient-to-r from-[#2ee6d6] via-[#ff2e83] to-[#ffcf5c] rounded-full" />
 
         {/* Left: Thumbnail & Info */}
         <div
-          className="flex items-center gap-2 sm:gap-3 cursor-pointer group overflow-hidden"
+          className="flex items-center gap-2 sm:gap-3 cursor-pointer group overflow-hidden h-full"
           onClick={() => onOpenModal && onOpenModal(currentItem)}
         >
           <div className="relative h-9 w-9 sm:h-12 sm:w-12 flex-shrink-0 overflow-hidden rounded-lg sm:rounded-xl bg-gray-900 border border-white/20">
@@ -34,27 +34,28 @@ export default function BottomAudioDock({ activeCardId, onToggleAudio, onStopAud
               alt={currentItem.caption}
               className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-300"
             />
-            {/* Spinning vinyl badge */}
+            {/* Vinyl badge */}
             <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-              <span className="text-[10px] sm:text-sm animate-spin">💿</span>
+              <span className="text-[10px] sm:text-sm">💿</span>
             </div>
           </div>
 
-          <div className="text-left overflow-hidden">
-            <div className="flex items-center gap-1 sm:gap-2">
+          <div className="text-left overflow-hidden h-full flex flex-col justify-center">
+            <div className="flex items-center gap-1.5">
               <span className="text-[9px] sm:text-xs font-semibold uppercase tracking-wider truncate text-[#ff2e83]">
                 Playing #{String(currentItem.id).padStart(2, "0")}
               </span>
+              {/* Static 3-Pillar Audio Icon (0 Height Animation = 0 Jitter!) */}
               <span className="flex items-center gap-0.5 flex-shrink-0">
-                <span className="h-2 sm:h-3 w-0.5 sm:w-1 bg-[#2ee6d6] animate-bounce" />
-                <span className="h-3 sm:h-4 w-0.5 sm:w-1 bg-[#ff2e83] animate-bounce [animation-delay:0.2s]" />
-                <span className="h-2 sm:h-2.5 w-0.5 sm:w-1 bg-[#ffcf5c] animate-bounce [animation-delay:0.4s]" />
+                <span className="h-3 w-1 bg-[#2ee6d6] rounded-full" />
+                <span className="h-4 w-1 bg-[#ff2e83] rounded-full" />
+                <span className="h-2.5 w-1 bg-[#ffcf5c] rounded-full" />
               </span>
             </div>
-            <h4 className="text-[11px] sm:text-sm font-bold text-white truncate max-w-[120px] sm:max-w-[240px]">
+            <h4 className="text-[11px] sm:text-sm font-bold text-white truncate max-w-[120px] sm:max-w-[240px] leading-tight">
               {currentItem.songTitle}
             </h4>
-            <p className="text-[9px] sm:text-xs text-white/60 truncate max-w-[120px] sm:max-w-[240px]">
+            <p className="text-[9px] sm:text-xs text-white/60 truncate max-w-[120px] sm:max-w-[240px] leading-tight">
               {currentItem.songArtist}
             </p>
           </div>
