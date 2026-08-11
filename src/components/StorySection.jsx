@@ -4,40 +4,40 @@ const chapters = [
   {
     n: "01",
     hi: "Pehla Din, Anjaan Sheher",
-    sub: "AMU Entry · 2022",
-    body: "College ke pehle din jab poori AMU University mere liye anjaan thi, main akela tha. Har taraf bheed thi, par mera koi apna nahi tha.",
+    sub: "The Beginning · 2022",
+    body: "Naye sheher ki bheed mein jab har chehra anjaan tha... tab pehla haath tune hi badhaya tha.",
     accent: "#ff2e83",
     icon: "🎒",
   },
   {
     n: "02",
     hi: "Sir Ross Masood Hall Ka Gate",
-    sub: "The Iconic Meeting",
-    body: "Aaj bhi yaad hai mujhe — Sir Ross Masood Hall ke gate par tu mera intezaar kar raha tha. Us anjaan sheher mein pehla haath tune hi milaaya tha, aur wahi se humari sachhi dosti shuru hui.",
+    sub: "The Unforgettable Meeting",
+    body: "Gate par tera mera intezaar karna — wahi se ek aisi dosti shuru hui jo waqt ke saath aur gehri hoti gayi.",
     accent: "#2ee6d6",
     icon: "🏛️",
   },
   {
     n: "03",
-    hi: "AMU Ki Galiyan Aur Late Night Chai",
-    sub: "Unforgettable Memories",
-    body: "Sir Ross Masood Hall se lekar dukaano ki late night chai tak... wo baatein, future ke sapne, aur be-wajah ki hansi ne college ke dino ko zindadili se bhar diya.",
+    hi: "Yaadon Ki Kitaab Ka Ek Khaas Kona",
+    sub: "Treasured Moments",
+    body: "Zindagi ki is kitaab mein hazaron safhe hain, par sabse khoobsurat aur khaas panna sirf tere naam ka hai.",
     accent: "#ffcf5c",
-    icon: "☕",
+    icon: "📖",
   },
   {
     n: "04",
-    hi: "AMU Se IIT Tak Ka Shandaar Safar",
-    sub: "Growing Together",
-    body: "Saal badal gaye, sheher badal gaye, par teri niyat aur teri yaari bilkul nahi badli. Tu aaj bhi wahi imandar aur sachha insaan hai jo us gate par mila tha.",
+    hi: "Waqt Badla, Par Tu Nahi Badla",
+    sub: "Unchanged Loyalty",
+    body: "Kitne hi saal beet gaye, mausam badal gaye... par teri imandari aur tera apnapan aaj bhi wahi hai.",
     accent: "#8b5cff",
-    icon: "🚀",
+    icon: "✨",
   },
   {
     n: "05",
-    hi: "Dosti Se Badhkar Bhaichara",
-    sub: "Brotherhood Beyond Words",
-    body: "Jab koi nahi tha, tab tu tha. Teri khushi mein meri jeet hai, aur teri kamyabi par mujhe apne aap se zyaada garv hota hai. Tu mera pehla aur sabse khaas dost hai.",
+    hi: "Shukriya Meri Zindagi Ka Hissa Banne Ke Liye",
+    sub: "Pure Gratitude",
+    body: "Bas itna kehna tha ki tera hona hi meri sabse badi taqat hai. Shukriya har us lamhe ke liye jo tune khaas banaya.",
     accent: "#ff2e83",
     icon: "👑",
   },
@@ -45,7 +45,7 @@ const chapters = [
     n: "06",
     hi: "Jeetna Hai Toh Sirf Tere Saath",
     sub: "The Promise · 12 August",
-    body: "Zindagi ki har race mein, har mod par mujhe aage badhna hai — par sirf tere saath. Happy Birthday Mithlesh! Tu tha, tu hai, aur tu hi hamesha mera sabse sachha dost rahega.",
+    body: "Happy Birthday Mithlesh! Zindagi ki har daur mein aage badhenge — hamesha ek doosre ke saath.",
     accent: "#ffcf5c",
     icon: "💖",
   },
@@ -62,12 +62,12 @@ export default function StorySection() {
         transition={{ duration: 0.8 }}
         className="mb-20 text-center sm:text-left"
       >
-        <p className="font-hand text-3xl text-[#2ee6d6]">dil se nikli kahani 📖</p>
+        <p className="font-hand text-3xl text-[#2ee6d6]">dil ki kitaab 📖</p>
         <h2 className="mt-2 text-4xl font-extrabold uppercase leading-none sm:text-6xl text-white">
-          Ross Masood Hall Se <span className="font-serif-i italic normal-case text-[#ff2e83]">IIT Tak</span>
+          Yaadon Ka <span className="font-serif-i italic normal-case text-[#ff2e83]">Khaas Kona</span>
         </h2>
         <p className="mt-3 max-w-xl text-sm sm:text-base text-white/75 leading-relaxed">
-          Pehle din ki tanhai se lekar aaj tak ki pukhta dosti — Mithlesh aur meri dosti ki asli dastan.
+          Zindagi ke hazaron panno mein se sabse sunehra panna — Mithlesh aur meri yaari.
         </p>
       </motion.div>
 

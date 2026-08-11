@@ -34,24 +34,24 @@ export default function Wishes() {
           </div>
 
           <h3 className="font-serif-i text-3xl sm:text-5xl italic text-[#f4efe6] leading-tight mb-6">
-            "Mithlesh, Sir Ross Masood Hall ke gate ka wo pehla din main kabhi nahi bhool sakta."
+            "Mithlesh, meri yaadon ki kitaab mein ek kona tera bhi hai..."
           </h3>
 
           <div className="space-y-4 text-base sm:text-lg text-white/85 leading-relaxed font-sans">
             <p>
-              College ke pehle din jab main poori AMU University mein bilkul akela tha, na kisi se pehchan thi na aage ka pata... tab Sir Ross Masood Hall ke gate par tu mera intezaar kar raha tha. Us anjaan sheher mein tune pehla haath milaaya aur dosti ki aisi misaal kayam ki jo aaj tak kayam hai.
+              Waqt kitna bhi aage nikal jaye, kuch lamhe aur kuch insaan kabhi purane nahi hote. Sir Ross Masood Hall ke gate par tera intezaar karna aur us anjaan sheher mein mera pehla dost banna — wo ek aisa pal tha jisne meri zindagi badal di.
             </p>
             <p>
-              Sir Ross Masood Hall ke un dino se lekar aaj IIT ke is safar tak, tune har kadam par ek sachhe bhai ki tarah mera saath diya hai. Tu sirf ek accha dost nahi hai — tu mera wo sachha yaar hai jis par main hamesha garv karta hoon.
+              Kitaab-e-zindagi ke hazaaron panno mein se, sabse khaas aur sunehra panna tera hai. Saal beet gaye, waqt badal gaya... par tu aaj bhi wahi sachha insaan hai jis par main aankhein band karke bharosa kar sakta hoon.
             </p>
             <p className="font-bold text-[#2ee6d6]">
-              Aaj tere janamdin par main upar wale se bas yahi maangta hoon ki teri har khwahish poori ho. Mujhe zindagi ki har race jeetni hai, par sirf tere saath.
+              Bas shukriya kehna tha ki tu meri zindagi ka itna khoobsurat hissa hai. Teri har khwahish poori ho, aur hum hamesha aise hi saath aage badhte rahein.
             </p>
           </div>
 
           <div className="mt-8 border-t border-white/10 pt-6 flex items-center justify-between">
             <div>
-              <p className="font-hand text-2xl text-[#ff2e83]">Tera Sabse Purana Dost</p>
+              <p className="font-hand text-2xl text-[#ff2e83]">Tera Purana Yaar</p>
               <p className="text-xs text-white/50 uppercase tracking-wider">Forever Grateful</p>
             </div>
             <span className="text-4xl">👑</span>
