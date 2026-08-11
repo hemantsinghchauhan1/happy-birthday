@@ -22,7 +22,7 @@ export default function TiltCard({ item, index, isPlaying, onToggleAudio, onOpen
   const reset = () => { mx.set(0); my.set(0); };
 
   const handleCardClick = (e) => {
-    // If card is not revealed yet, unwrap it as a surprise!
+    // If card is not revealed yet, unwrap it as a surprise & play its song!
     if (!isRevealed) {
       fireConfetti();
       setIsRevealed(true);
@@ -113,7 +113,7 @@ export default function TiltCard({ item, index, isPlaying, onToggleAudio, onOpen
               </p>
 
               <div className="mt-5 rounded-full bg-[#ff2e83] px-4 py-2 text-xs font-bold text-white shadow-lg shadow-[#ff2e83]/40 transition group-hover:scale-105">
-                🎉 Open Surprise
+                🎉 Open Surprise & Play Song
               </div>
             </motion.div>
           ) : (
