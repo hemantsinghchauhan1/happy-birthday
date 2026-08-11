@@ -74,7 +74,6 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
   const [activePad, setActivePad] = useState(0); // 0, 1, 2, 3
   const [photoOffset, setPhotoOffset] = useState(0);
   const [jumpStyleIdx, setJumpStyleIdx] = useState(0);
-  const [landedPad, setLandedPad] = useState(0); // Updates ONLY after flight completes!
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -89,22 +88,20 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
     my.set((e.clientY - r.top) / r.height - 0.5);
   };
 
-  // Jump Interval: Launches flight every 4.2 seconds
+  // Jump Interval: Launches flight every 4 seconds
   useEffect(() => {
     const timer = setInterval(() => {
-      setActivePad((prev) => (prev + 1) % 4);
+      setActivePad((prev) => {
+        const nextPad = (prev + 1) % 4;
+        if (nextPad === 0) {
+          setPhotoOffset((po) => (po + 1) % memories.length);
+        }
+        return nextPad;
+      });
       setJumpStyleIdx((prev) => (prev + 1) % jumpStyles.length);
-    }, 4200);
+    }, 4000);
     return () => clearInterval(timer);
   }, []);
-
-  // Called ONLY when the 3D flight animation lands cleanly into the destination pad!
-  const handleFlightComplete = () => {
-    setLandedPad(activePad);
-    if (activePad === 0) {
-      setPhotoOffset((po) => (po + 1) % memories.length);
-    }
-  };
 
   const currentPad = padCoordinates[activePad];
   const activeMemory = memories[(photoOffset + activePad) % memories.length];
@@ -131,27 +128,27 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         <div className="absolute right-1/5 top-1/4 h-[45vh] w-[45vh] rounded-full bg-[#8b5cff]/25 blur-[130px]" />
       </div>
 
-      {/* 4 Corner Landing Pads */}
+      {/* 4 Corner Landing Pads (Stationary pads hide when activePad is occupied by flying card to prevent double ghosting!) */}
       <motion.div
         className="absolute inset-0 z-10 block"
         style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}
       >
         {padCoordinates.map((pad, idx) => {
           const padMemory = memories[(photoOffset + idx) % memories.length];
-          const isLandedHere = idx === landedPad;
+          const isCurrentActive = idx === activePad;
 
           return (
             <motion.div
               key={pad.id}
-              className="absolute cursor-pointer group"
+              className={`absolute cursor-pointer group transition-opacity duration-300 ${
+                isCurrentActive ? "opacity-0 pointer-events-none" : "opacity-100 pointer-events-auto"
+              }`}
               style={{ ...pad.pos, transformStyle: "preserve-3d" }}
               onClick={() => onOpenModal && onOpenModal(padMemory)}
               whileHover={{ scale: 1.12, zIndex: 40 }}
             >
               <div
-                className={`relative w-24 sm:w-36 md:w-40 rounded-2xl bg-white p-1.5 sm:p-2 shadow-[0_20px_50px_rgba(0,0,0,0.6)] transition-all duration-500 ${
-                  isLandedHere ? "ring-2 sm:ring-4 ring-[#ff2e83] shadow-[0_0_35px_rgba(255,46,131,0.6)] scale-102" : "border border-white/50"
-                }`}
+                className="relative w-24 sm:w-36 md:w-40 rounded-2xl bg-white p-1.5 sm:p-2 shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-white/50"
                 style={{ transform: `rotate(${pad.rot}deg)` }}
               >
                 {/* Washi tape clip */}
@@ -170,7 +167,7 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
         })}
       </motion.div>
 
-      {/* Dynamic 3D Flying Card (Carries Photo & Submerges ONLY after Landing!) */}
+      {/* Single Dynamic 3D Flying Card (Sole active card at activePad location - 0 double ghosting!) */}
       <motion.div
         className="absolute z-30 block pointer-events-auto cursor-pointer"
         animate={{
@@ -178,17 +175,16 @@ export default function Hero({ music, cardAudio, onOpenModal }) {
           top: currentPad.pos.top,
         }}
         transition={{
-          duration: 1.4,
+          duration: 1.3,
           ease: [0.25, 1, 0.5, 1],
         }}
-        onAnimationComplete={handleFlightComplete}
         onClick={() => onOpenModal && onOpenModal(activeMemory)}
       >
         <motion.div
-          key={`${activePad}-${jumpStyleIdx}`}
+          key={`${photoOffset}-${activePad}-${jumpStyleIdx}`}
           animate={currentJumpStyle.anim(currentPad.rot)}
           transition={{
-            duration: 1.4,
+            duration: 1.3,
             ease: "easeInOut",
             times: [0, 0.3, 0.7, 1],
           }}
