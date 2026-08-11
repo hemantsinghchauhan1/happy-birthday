@@ -3,42 +3,50 @@ import { motion } from "framer-motion";
 const chapters = [
   {
     n: "01",
-    hi: "Pehla Din, Akela Main",
+    hi: "Pehla Din, Anjaan Sheher",
     sub: "AMU Entry · 2022",
-    body: "College ke pehle din jab sab anjaan the, main akela tha. Na koi apna tha, na kisi se baat hoti thi. Ek aisi jagah jahan har chehra naya tha aur dil mein ek anjaana darr tha.",
+    body: "College ke pehle din jab main poore AMU mein bilkul akela tha... Na koi dost tha, na rukne ke liye koi jagah. Ek naye sheher ke bheed mein main khud ko bohot akela mehsoos kar raha tha.",
     accent: "#ff2e83",
     icon: "🎒",
   },
   {
     n: "02",
-    hi: "Bheed Mein Ek Apna Insaan",
-    sub: "The Unforgettable Meeting",
-    body: "Phir tu aaya. Bina kisi matlab ke tune haath badhaya, jagah di, aur sabse zaroori — apnapan diya. AMU ki wo hostel rooms aur galiyan tere bina bilkul adhoori lagti.",
+    hi: "Bheed Mein Ek Farishta — Mithlesh",
+    sub: "The First Handshake",
+    body: "Phir tu aaya. Tune bina kisi matlab ke haath badhaya, apna kamra khola, aur sabse zaroori — mujhe apnapan diya. Tune mujhe us din bataya ki dosti kya hoti hai.",
     accent: "#2ee6d6",
     icon: "🤝",
   },
   {
     n: "03",
-    hi: "Raat Ke 2 Baje Ki Maggi Aur Sapne",
-    sub: "Hostel Room Chronicles",
-    body: "Wo late night baatein, ex-girlfriend ke kisse, future ke sapne, aur be-wajah ki hansi. Humne saath mein hasti banayi hai, mushkilon ko muskura kar jeeta hai.",
+    hi: "AMU Ki Galiyan Aur Late Night Maggi",
+    sub: "Hostel Room Memories",
+    body: "Wo 2 baje ki garam chai, hostel room ki late night baatein, ex-girlfriend ke kisse, aur future ke bade sapne... Humne har mushkil ko muskura kar jeeta hai.",
     accent: "#ffcf5c",
-    icon: "🍜",
+    icon: "☕",
   },
   {
     n: "04",
-    hi: "Dost Se Badhkar, Bhai Se Kam Nahi",
-    sub: "Brotherhood Beyond Words",
-    body: "Tu sirf dost nahi — mera bhai hai. Jab koi nahi tha, tab tu tha. Teri khushi meri jeet hai, aur teri kamyabi par mujhe sabse bada garv hota hai.",
+    hi: "AMU Se IIT Tak Ka Shandaar Safar",
+    sub: "Growing Together",
+    body: "Saal badal gaye, sheher badal gaye, par teri niyat aur teri yaari bilkul nahi badli. Tu aaj bhi wahi sachha aur imandar insaan hai jo college ke pehle din mila tha.",
     accent: "#8b5cff",
-    icon: "👑",
+    icon: "🚀",
   },
   {
     n: "05",
-    hi: "AMU Se IIT Tak, Hamesha Saath",
-    sub: "Forever & Always",
-    body: "Kitna bhi aage nikal jayein hum, ye yaari kabhi nahi badlegi. Happy Birthday Mithlesh — tu tha, tu hai, aur tu hi hamesha mera pehla aur sabse sachha dost rahega!",
+    hi: "Tu Sirf Dost Nahi, Mera Bhai Hai",
+    sub: "Eternal Brotherhood",
+    body: "Jab koi nahi tha, tab tu tha. Teri khushi mein meri jeet hai, aur teri kamyabi par mujhe apne aap se zyaada garv hota hai. Tu mera pehla aur sabse khaas dost hai.",
     accent: "#ff2e83",
+    icon: "👑",
+  },
+  {
+    n: "06",
+    hi: "Jeetna Hai Toh Sirf Tere Saath Jeetna Hai",
+    sub: "The Promise · 12 August",
+    body: "Zindagi ki har race mein, har mod par mujhe aage badhna hai — par sirf tere saath. Happy Birthday Mithlesh! Tu tha, tu hai, aur tu hi hamesha mera bhai rahega.",
+    accent: "#ffcf5c",
     icon: "💖",
   },
 ];
@@ -54,12 +62,12 @@ export default function StorySection() {
         transition={{ duration: 0.8 }}
         className="mb-20 text-center sm:text-left"
       >
-        <p className="font-hand text-3xl text-[#2ee6d6]">hamari dosti ki kahani 📖</p>
+        <p className="font-hand text-3xl text-[#2ee6d6]">dil se nikli kahani 📖</p>
         <h2 className="mt-2 text-4xl font-extrabold uppercase leading-none sm:text-6xl text-white">
-          Dil Ke <span className="font-serif-i italic normal-case text-[#ff2e83]">Panno Se</span>
+          AMU Se IIT <span className="font-serif-i italic normal-case text-[#ff2e83]">Tak Ka Safar</span>
         </h2>
-        <p className="mt-3 max-w-lg text-sm sm:text-base text-white/70">
-          Ek anjaan sheher se shuru hui ye dosti, aaj zindagi ka sabse khoobsurat hissa ban chuki hai.
+        <p className="mt-3 max-w-xl text-sm sm:text-base text-white/75 leading-relaxed">
+          Pehle din ki tanhai se lekar aaj tak ki bhaichare ki misaal — Mithlesh aur meri dosti ki dastan.
         </p>
       </motion.div>
 
