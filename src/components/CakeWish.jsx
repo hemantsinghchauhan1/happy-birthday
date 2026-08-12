@@ -4,29 +4,44 @@ import { fireConfetti } from "./Confetti";
 
 export default function CakeWish() {
   const [blown, setBlown] = useState(false);
+  const [isCut, setIsCut] = useState(false);
+  const [isCuttingAnim, setIsCuttingAnim] = useState(false);
   const [isPlayingMeme, setIsPlayingMeme] = useState(false);
   const audioRef = useRef(null);
 
-  const makeWish = () => {
-    if (blown) return;
-    setBlown(true);
+  const handleCakeClick = () => {
+    // Phase 1: Blow Candles
+    if (!blown) {
+      setBlown(true);
+      fireConfetti();
+      setTimeout(fireConfetti, 400);
 
-    // Fire triple confetti celebration bursts
-    fireConfetti();
-    setTimeout(fireConfetti, 400);
-    setTimeout(fireConfetti, 900);
+      // Play Happy Birthday Meme Song
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.volume = 1.0;
+        audioRef.current
+          .play()
+          .then(() => setIsPlayingMeme(true))
+          .catch((err) => {
+            console.warn("Audio playback allowed on click:", err);
+            setIsPlayingMeme(true);
+          });
+      }
+      return;
+    }
 
-    // Play Happy Birthday Meme Song - Rohit Katwara
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.volume = 1.0;
-      audioRef.current
-        .play()
-        .then(() => setIsPlayingMeme(true))
-        .catch((err) => {
-          console.warn("Audio playback allowed on user click:", err);
-          setIsPlayingMeme(true);
-        });
+    // Phase 2: Cut Cake
+    if (!isCut && !isCuttingAnim) {
+      setIsCuttingAnim(true);
+
+      // Fire celebratory confetti for cake cutting
+      setTimeout(() => {
+        setIsCut(true);
+        setIsCuttingAnim(false);
+        fireConfetti();
+        setTimeout(fireConfetti, 500);
+      }, 900);
     }
   };
 
@@ -45,7 +60,7 @@ export default function CakeWish() {
 
   return (
     <section className="relative z-10 flex flex-col items-center px-5 py-28 text-center overflow-hidden" data-testid="cake-wish">
-      {/* Explicit Preloaded HTML5 Audio Element for Rock-Solid Browser Playback */}
+      {/* Explicit Preloaded HTML5 Audio Element */}
       <audio ref={audioRef} src="/audio/birthday_meme.mp3" preload="auto" loop />
 
       {/* Glow Backdrop */}
@@ -67,19 +82,55 @@ export default function CakeWish() {
         </h2>
       </motion.div>
 
-      <p className="relative z-10 mb-14 text-sm sm:text-base text-white/75">
-        {blown ? "Wish poori ho meri jaan! 🎉 Meme Song is Playing 🎵" : "Tap the cake to blow the candles! 🕯️✨"}
-      </p>
+      {/* Dynamic Status Helper Badge */}
+      <div className="relative z-10 mb-12 flex items-center justify-center">
+        {!blown ? (
+          <span className="rounded-full bg-white/10 px-5 py-2 text-sm sm:text-base font-semibold text-white backdrop-blur-md border border-white/20 animate-pulse">
+            🕯️ Tap the cake to blow the candles!
+          </span>
+        ) : !isCut ? (
+          <span className="rounded-full bg-[#ffcf5c]/20 px-5 py-2 text-sm sm:text-base font-extrabold text-[#ffcf5c] backdrop-blur-md border border-[#ffcf5c]/40 animate-bounce">
+            🔪 Tap or click the cake to CUT IT!
+          </span>
+        ) : (
+          <span className="rounded-full bg-[#2ee6d6]/20 px-5 py-2 text-sm sm:text-base font-extrabold text-[#2ee6d6] backdrop-blur-md border border-[#2ee6d6]/40">
+            🎉 Cake Cut Successfully! Wish Mithlesh Happiest Birthday! 🥳
+          </span>
+        )}
+      </div>
 
-      {/* 3D Realistic Animated Birthday Cake */}
-      <div className="relative z-10 my-4" style={{ perspective: 1000 }}>
-        <button
-          onClick={makeWish}
+      {/* 3D Realistic Animated Birthday Cake Container */}
+      <div className="relative z-10 my-4 select-none" style={{ perspective: 1000 }}>
+        <div
+          onClick={handleCakeClick}
           className="relative block cursor-pointer group focus:outline-none"
           data-testid="cake-button"
-          aria-label="Blow Candles"
         >
-          {/* 5 Realistic Candles with Animated Core Flames & Smoke */}
+          {/* 3D Golden Birthday Knife for Cutting */}
+          <AnimatePresence>
+            {blown && (
+              <motion.div
+                initial={{ opacity: 0, y: -60, rotate: -25 }}
+                animate={
+                  isCuttingAnim
+                    ? { y: [0, 110, 110], x: [0, 0, 10], rotate: [-25, 0, 15] }
+                    : isCut
+                    ? { opacity: 0, scale: 0 }
+                    : { opacity: 1, y: 0, rotate: -25 }
+                }
+                transition={{ duration: isCuttingAnim ? 0.9 : 0.4, ease: "easeInOut" }}
+                className="absolute -top-24 right-10 z-50 pointer-events-none drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]"
+              >
+                {/* 3D Knife Blade & Handle */}
+                <div className="flex flex-col items-center">
+                  <div className="h-20 w-4 bg-gradient-to-r from-gray-200 via-white to-gray-400 rounded-t-sm border border-gray-400 shadow-xl clip-knife" />
+                  <div className="h-10 w-5 bg-gradient-to-b from-[#ffcf5c] to-[#ff9a3c] rounded-b-md border border-amber-600 shadow-md" />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* 5 Realistic Candles */}
           <div className="absolute -top-20 left-1/2 flex -translate-x-1/2 gap-5 z-40">
             {[
               { color: "from-[#ff2e83] to-[#ff7b00]", glow: "#ff2e83" },
@@ -104,7 +155,6 @@ export default function CakeWish() {
                       transition={{ repeat: Infinity, duration: 0.6 + i * 0.1, ease: "easeInOut" }}
                       className="relative mb-1 flex items-center justify-center"
                     >
-                      {/* Outer Glow Aura */}
                       <div
                         className="h-7 w-4 rounded-full blur-[1px]"
                         style={{
@@ -112,8 +162,6 @@ export default function CakeWish() {
                           boxShadow: `0 0 20px ${c.glow}, 0 0 40px ${c.glow}`,
                         }}
                       />
-
-                      {/* Inner Blue-White Flame Core */}
                       <div className="absolute bottom-0.5 h-3 w-1.5 rounded-full bg-cyan-200 blur-[0.5px]" />
                     </motion.div>
                   ) : (
@@ -140,8 +188,23 @@ export default function CakeWish() {
             ))}
           </div>
 
-          {/* 3-Tier Layered Birthday Cake with Dripping Frosting & Pearls */}
-          <div className="flex flex-col items-center filter drop-shadow-[0_25px_35px_rgba(0,0,0,0.8)]">
+          {/* 3-Tier Layered Birthday Cake with Cut Slice Separation Animation! */}
+          <div className="relative flex flex-col items-center filter drop-shadow-[0_25px_35px_rgba(0,0,0,0.8)]">
+            {/* Cut Slice Separating Outward */}
+            {isCut && (
+              <motion.div
+                initial={{ opacity: 0, x: 0, rotateY: 0 }}
+                animate={{ opacity: 1, x: -45, y: 10, rotateY: -30 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="absolute left-6 top-4 z-40 flex flex-col items-center pointer-events-none filter drop-shadow-[0_15px_25px_rgba(0,0,0,0.9)]"
+              >
+                {/* Triangular Cake Slice Representation */}
+                <div className="h-12 w-16 bg-gradient-to-b from-[#ffffff] to-[#ffd6e7] rounded-tl-xl border-l-2 border-t-2 border-white" />
+                <div className="-mt-1 h-14 w-20 bg-gradient-to-b from-[#ffcf5c] to-[#e67e00] border-l-2 border-amber-300" />
+                <div className="-mt-1 h-16 w-24 bg-gradient-to-b from-[#ff2e83] to-[#800c3b] rounded-bl-xl border-l-2 border-pink-400" />
+              </motion.div>
+            )}
+
             {/* Top Tier (Strawberry White Cream) */}
             <div className="relative h-16 w-48 rounded-t-2xl bg-gradient-to-b from-[#ffffff] via-[#fff0f5] to-[#ffd6e7] border-t-2 border-white flex justify-around items-end pb-1 shadow-inner">
               <div className="absolute top-0 left-0 right-0 h-4 bg-white/80 rounded-t-2xl flex justify-around items-center px-2">
@@ -168,7 +231,7 @@ export default function CakeWish() {
 
           {/* Cake Stand Base */}
           <div className="mx-auto h-4 w-96 rounded-b-2xl bg-gradient-to-r from-gray-300 via-white to-gray-400 shadow-[0_15px_30px_rgba(0,0,0,0.9)] border-t border-white/80" />
-        </button>
+        </div>
       </div>
 
       {/* Meme Song Control Button & Celebration Message */}
