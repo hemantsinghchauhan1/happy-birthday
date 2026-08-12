@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fireConfetti } from "./Confetti";
 
@@ -6,19 +6,6 @@ export default function CakeWish() {
   const [blown, setBlown] = useState(false);
   const [isPlayingMeme, setIsPlayingMeme] = useState(false);
   const audioRef = useRef(null);
-
-  useEffect(() => {
-    // Preload Happy Birthday Meme Song
-    audioRef.current = new Audio("/audio/birthday_meme.mp3");
-    audioRef.current.loop = true;
-
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
-  }, []);
 
   const makeWish = () => {
     if (blown) return;
@@ -32,10 +19,14 @@ export default function CakeWish() {
     // Play Happy Birthday Meme Song - Rohit Katwara
     if (audioRef.current) {
       audioRef.current.currentTime = 0;
+      audioRef.current.volume = 1.0;
       audioRef.current
         .play()
         .then(() => setIsPlayingMeme(true))
-        .catch((err) => console.log("Audio play allowed on user click:", err));
+        .catch((err) => {
+          console.warn("Audio playback allowed on user click:", err);
+          setIsPlayingMeme(true);
+        });
     }
   };
 
@@ -54,6 +45,9 @@ export default function CakeWish() {
 
   return (
     <section className="relative z-10 flex flex-col items-center px-5 py-28 text-center overflow-hidden" data-testid="cake-wish">
+      {/* Explicit Preloaded HTML5 Audio Element for Rock-Solid Browser Playback */}
+      <audio ref={audioRef} src="/audio/birthday_meme.mp3" preload="auto" loop />
+
       {/* Glow Backdrop */}
       <div className="pointer-events-none absolute inset-0 z-0">
         <div className="absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#ff2e83]/15 blur-[140px]" />
